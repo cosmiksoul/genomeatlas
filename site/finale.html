@@ -10,6 +10,7 @@
   .hero h1{font:400 clamp(44px,6.5vw,92px)/1 var(--serif);letter-spacing:-.02em;margin:0 0 22px} .hero h1 em{font-style:italic;color:var(--accent)}
   .hero p{font:19px/1.5 var(--serif);color:var(--ink-2);margin:0;max-width:560px}
   .hero .kick{font:12px var(--mono);letter-spacing:.1em;text-transform:uppercase;color:var(--ink-3);margin-top:24px}
+  .mednote{font:12px/1.5 var(--mono);color:var(--ink-3);margin-top:14px;max-width:520px}
   .ladder{display:grid;gap:10px}
   .ladder .row{display:grid;grid-template-columns:170px 1fr 90px;gap:14px;align-items:center;font:12px var(--sans);color:var(--ink-2)}
   .ladder .row b{font:400 15px var(--serif);color:var(--ink)} .ladder .bar{height:22px;position:relative} .ladder .bar i{position:absolute;left:0;top:0;bottom:0;background:var(--ink)}
@@ -71,11 +72,19 @@
   .pnav a.item.on{color:var(--ink,#17160f);box-shadow:inset 0 -2px 0 var(--accent,#c4901e)}
   .pnav .sp{flex:1}
   .pnav .meta{padding:16px clamp(20px,6vw,90px) 16px 22px;color:var(--ink-3,#9a968a);white-space:nowrap}
-  @media (max-width:900px){.pnav{flex-wrap:wrap}.pnav .meta{display:none}.pnav a.item{padding:12px 14px}.pnav .brand{padding:12px 20px;border-right:0;width:100%;border-bottom:1px solid var(--line,#d8d3c7)}}
+  @media (max-width:1620px){.pnav .meta{display:none}}
+  @media (max-width:1220px){.pnav a.item{padding:16px 14px}}
+  @media (max-width:1080px) and (min-width:901px){.pnav a.item .t{display:none}}
+  @media (max-width:900px){.pnav{flex-wrap:wrap}.pnav a.item{padding:12px 14px}.pnav .brand{padding:12px 20px;border-right:0;width:100%;border-bottom:1px solid var(--line,#d8d3c7)}}
+  .pnext{border-top:1px solid var(--ink,#17160f);background:var(--paper,#f5f2ec)}
+  .pnext a{display:flex;flex-wrap:wrap;justify-content:space-between;align-items:baseline;gap:10px 30px;padding:30px clamp(20px,6vw,90px) 60px;text-decoration:none}
+  .pnext .lbl{font:12px var(--mono,Menlo,monospace);letter-spacing:.12em;text-transform:uppercase;color:var(--ink-3,#9a968a)}
+  .pnext .ttl{font:400 clamp(26px,3.4vw,44px)/1.1 var(--serif,Georgia,serif);letter-spacing:-.02em;color:var(--ink,#17160f);transition:color .2s}
+  .pnext a:hover .ttl{color:var(--accent,#c4901e)}
 </style>
 </head>
 <body>
-<nav class="pnav"><a class="brand" href="index.html"><i></i>Карта невозможного</a><a class="item" href="genes.html"><b>01</b>Гены, о которых вы слышали</a><a class="item" href="tissues.html"><b>02</b>Одна мутация, сорок тканей</a><a class="item" href="brca1.html"><b>03</b>Одиннадцать тысяч приговоров</a><a class="item on" href="finale.html"><b>04</b>Чего никто не видел</a><span class="sp"></span><span class="meta">AlphaGenome Atlas · 2026</span></nav>
+<nav class="pnav"><a class="brand" href="index.html"><i></i>Карта невозможного</a><a class="item" href="genes.html"><b>01</b><span class="t">Гены, о которых вы слышали</span></a><a class="item" href="tissues.html"><b>02</b><span class="t">Одна мутация, сорок тканей</span></a><a class="item" href="brca1.html"><b>03</b><span class="t">Одиннадцать тысяч приговоров</span></a><a class="item on" href="finale.html"><b>04</b><span class="t">Чего никто не видел</span></a><span class="sp"></span><span class="meta">AlphaGenome Atlas · 2026</span></nav>
 <div class="tag">данные: Atlas + gnomAD + ClinVar + MaveDB · черновик</div>
 <div class="tip" id="tip"></div>
 <section class="hero">
@@ -83,6 +92,7 @@
     <h1>Чего никто <em>не видел</em></h1>
     <p>Финал. Три истории мы проверяли модель — врачами, тканями, консилиумом. Теперь про то, какая часть Атласа вообще проверяема. Спойлер: очень небольшая.</p>
     <div class="kick">Ген BRCA1 · 389 859 возможных замен · лестница проверки</div>
+    <div class="mednote">Всё на этой странице — предсказания модели и открытые данные, не медицинская информация.</div>
   </div>
   <div class="ladder" id="ladder"></div>
 </section>
@@ -140,7 +150,7 @@
 
 <section class="method">
   <div><h5>Откуда данные</h5>
-    <p>Атлас: те же 389 859 замен BRCA1 и окна ±5 000 букв десяти генов, что в историях 01 и 03. gnomAD v4.1 через GraphQL API: все однобуквенные варианты в тех же координатах, «видели» = allele count ≥ 1 в экзомах или геномах. ClinVar: 11 650 записей из истории 03. Эксперимент: Findlay et al. 2018, нормализованные оценки из MaveDB (urn:mavedb:00000097-0-2), координаты c.-номенклатуры NM_007294.3 пересчитаны в GRCh38 по каноническому транскрипту; референсная буква совпала с Атласом для 100 % из 3 828 замен. Классы по порогам авторов: нефункциональные &lt; −1,328, функциональные &gt; −0,748.</p>
+    <p>Атлас: те же 389 859 замен BRCA1 и окна ±5 000 букв десяти генов, что в историях 01 и 03. gnomAD v4.1 через GraphQL API: все однобуквенные варианты в тех же координатах, «видели» = allele count ≥ 1 в экзомах или геномах. Оценка «меньше десятой части» для генома целиком: в gnomAD v4 каталогизировано 786,5 млн SNV — около 9 % из ~9 млрд возможных. ClinVar: 11 650 записей из истории 03. Эксперимент: Findlay et al. 2018, нормализованные оценки из MaveDB (urn:mavedb:00000097-0-2), координаты c.-номенклатуры NM_007294.3 пересчитаны в GRCh38 по каноническому транскрипту; референсная буква совпала с Атласом для 100 % из 3 828 замен. Классы по порогам авторов: нефункциональные &lt; −1,328, функциональные &gt; −0,748.</p>
     <details class="srcs"><summary>Источники</summary><ol><li><a href="https://gnomad.broadinstitute.org/news/2024-04-gnomad-v4-1/" target="_blank" rel="noopener">gnomAD v4.1 — release notes (730 947 экзомов, 76 215 геномов)</a></li><li><a href="https://gnomad.broadinstitute.org/api" target="_blank" rel="noopener">gnomAD GraphQL API</a></li><li><a href="https://www.nature.com/articles/s41586-018-0461-z" target="_blank" rel="noopener">Findlay et al. — Accurate classification of BRCA1 variants with saturation genome editing. Nature 2018</a></li><li><a href="https://www.mavedb.org/score-sets/urn:mavedb:00000097-0-2" target="_blank" rel="noopener">MaveDB — BRCA1 SGE normalized scores, urn:mavedb:00000097-0-2</a></li><li><a href="https://www.ncbi.nlm.nih.gov/clinvar/?term=BRCA1%5Bgene%5D" target="_blank" rel="noopener">ClinVar — BRCA1</a></li><li><a href="https://www.biorxiv.org/content/10.1101/2025.06.25.661532v1" target="_blank" rel="noopener">Avsec et al. — AlphaGenome (препринт, 2025): данные обучения — ENCODE, GTEx, FANTOM5, 4DN</a></li><li><a href="https://www.science.org/doi/10.1126/science.adg7492" target="_blank" rel="noopener">Cheng et al. — AlphaMissense. Science 2023</a></li><li><a href="https://deepmind.google/blog/alphagenome-atlas-a-predictive-map-of-every-possible-dna-letter-change-in-the-human-genome/" target="_blank" rel="noopener">DeepMind — AlphaGenome Atlas (блог)</a></li></ol></details>
   </div>
   <div><h5>Что здесь не так, как в жизни</h5>
@@ -194,4 +204,5 @@ ladder(document.getElementById('ladderTop'),[['в верхнем 1 %',F.top1,'']
   document.addEventListener('mouseover',e=>{const t=e.target.closest('.term');if(t)show(t)});document.addEventListener('mouseout',e=>{if(e.target.closest('.term'))hide()});
   document.addEventListener('click',e=>{const t=e.target.closest('.term');if(t){pinned=pinned===t?null:t;if(pinned)show(t);else hide()}else if(pinned){pinned=null;hide()}});addEventListener('scroll',()=>{if(pinned){pinned=null;hide()}},{passive:true})})();
 </script>
+<footer class="pnext"><a href="index.html"><span class="lbl">Конец · все четыре истории</span><span class="ttl">К оглавлению →</span></a></footer>
 </body></html>

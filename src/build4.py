@@ -32,6 +32,7 @@ page = r'''<!doctype html>
   .hero h1{font:400 clamp(44px,6.5vw,92px)/1 var(--serif);letter-spacing:-.02em;margin:0 0 22px} .hero h1 em{font-style:italic;color:var(--accent)}
   .hero p{font:19px/1.5 var(--serif);color:var(--ink-2);margin:0;max-width:560px}
   .hero .kick{font:12px var(--mono);letter-spacing:.1em;text-transform:uppercase;color:var(--ink-3);margin-top:24px}
+  .mednote{font:12px/1.5 var(--mono);color:var(--ink-3);margin-top:14px;max-width:520px}
   .ladder{display:grid;gap:10px}
   .ladder .row{display:grid;grid-template-columns:170px 1fr 90px;gap:14px;align-items:center;font:12px var(--sans);color:var(--ink-2)}
   .ladder .row b{font:400 15px var(--serif);color:var(--ink)} .ladder .bar{height:22px;position:relative} .ladder .bar i{position:absolute;left:0;top:0;bottom:0;background:var(--ink)}
@@ -90,6 +91,7 @@ page = r'''<!doctype html>
     <h1>Чего никто <em>не видел</em></h1>
     <p>Финал. Три истории мы проверяли модель — врачами, тканями, консилиумом. Теперь про то, какая часть Атласа вообще проверяема. Спойлер: очень небольшая.</p>
     <div class="kick">Ген BRCA1 · 389 859 возможных замен · лестница проверки</div>
+    <div class="mednote">Всё на этой странице — предсказания модели и открытые данные, не медицинская информация.</div>
   </div>
   <div class="ladder" id="ladder"></div>
 </section>
@@ -147,7 +149,7 @@ page = r'''<!doctype html>
 
 <section class="method">
   <div><h5>Откуда данные</h5>
-    <p>Атлас: те же 389 859 замен BRCA1 и окна ±5 000 букв десяти генов, что в историях 01 и 03. gnomAD v4.1 через GraphQL API: все однобуквенные варианты в тех же координатах, «видели» = allele count ≥ 1 в экзомах или геномах. ClinVar: 11 650 записей из истории 03. Эксперимент: Findlay et al. 2018, нормализованные оценки из MaveDB (urn:mavedb:00000097-0-2), координаты c.-номенклатуры NM_007294.3 пересчитаны в GRCh38 по каноническому транскрипту; референсная буква совпала с Атласом для 100 % из 3 828 замен. Классы по порогам авторов: нефункциональные &lt; −1,328, функциональные &gt; −0,748.</p>
+    <p>Атлас: те же 389 859 замен BRCA1 и окна ±5 000 букв десяти генов, что в историях 01 и 03. gnomAD v4.1 через GraphQL API: все однобуквенные варианты в тех же координатах, «видели» = allele count ≥ 1 в экзомах или геномах. Оценка «меньше десятой части» для генома целиком: в gnomAD v4 каталогизировано 786,5 млн SNV — около 9 % из ~9 млрд возможных. ClinVar: 11 650 записей из истории 03. Эксперимент: Findlay et al. 2018, нормализованные оценки из MaveDB (urn:mavedb:00000097-0-2), координаты c.-номенклатуры NM_007294.3 пересчитаны в GRCh38 по каноническому транскрипту; референсная буква совпала с Атласом для 100 % из 3 828 замен. Классы по порогам авторов: нефункциональные &lt; −1,328, функциональные &gt; −0,748.</p>
     <details class="srcs"><summary>Источники</summary><ol>%%SOURCES%%</ol></details>
   </div>
   <div><h5>Что здесь не так, как в жизни</h5>

@@ -163,7 +163,7 @@ page = r'''<!doctype html>
 <section class="hero">
   <div>
     <h1>Одна мутация,<br><em>сорок</em> тканей</h1>
-    <p>Точнее — 711 образцов тканей и клеток и около 4 500 предсказаний на одну букву. Как одна и та же опечатка в ДНК звучит в кишечнике, крови и мозге — и почему чаще всего её слышит только один орган.</p>
+    <p>Точнее — 711 образцов тканей и клеток и около 4&#8201;500 предсказаний на одну букву. Как одна и та же опечатка в ДНК звучит в кишечнике, крови и мозге — и почему чаще всего её слышит только один орган.</p>
     <div class="kicker">На кольце: <b>LCT · rs4988235</b> · «ген молока» · уровень РНК по 371 треку</div>
   </div>
   <div class="ring-wrap" id="heroRing"></div>
@@ -175,7 +175,7 @@ page = r'''<!doctype html>
   </div>
   <div class="legend-card">
     <h4>Анатомия кольца</h4>
-    <p>Двенадцать систем организма — двенадцать секторов. Ширина сектора — сколько в нём образцов. Каждый штрих — один трек: наружу — модель предсказывает усиление, внутрь — ослабление. Насыщенность — квантиль по геному; пунктир — клеточная линия, а не ткань.</p>
+    <p>Двенадцать систем организма — двенадцать секторов. Ширина сектора — сколько в нём образцов. Каждый штрих — один трек: наружу — модель предсказывает усиление, внутрь — ослабление. Насыщенность — квантиль: насколько сдвиг сильнее, чем у обычных, часто встречающихся у людей замен; пунктир — клеточная линия, а не ткань.</p>
     <div id="legendRing"></div>
     <div class="lg-row"><span><i style="background:var(--accent)"></i>усиление</span><span><i style="background:var(--down)"></i>ослабление</span><span><i style="background:var(--ink);opacity:.3"></i>слабый эффект</span><span><i style="background:repeating-linear-gradient(90deg,var(--ink) 0 2px,transparent 2px 4px)"></i>клеточная линия</span></div>
   </div>
@@ -222,7 +222,7 @@ page = r'''<!doctype html>
 <section class="method">
   <div>
     <h5>Откуда данные</h5>
-    <p>AlphaGenome Atlas API, запрос <code>query_variant</code> по каждому из десяти вариантов со скорерами DNASE, ATAC, CHIP_HISTONE, CHIP_TF, CAGE и RNA_SEQ (для целевого гена). Треки — из ENCODE, GTEx, FANTOM5; для каждого трека Атлас отдаёт предсказанный сдвиг и квантиль относительно всех замен генома. Разбиение 711 образцов на 12 систем — по названиям биообразцов, вручную проверенными правилами; спорные случаи (клеточные линии опухолей) отнесены к органу происхождения.</p>
+    <p>AlphaGenome Atlas API, запрос <code>query_variant</code> по каждому из десяти вариантов со скорерами DNASE, ATAC, CHIP_HISTONE, CHIP_TF, CAGE и RNA_SEQ (для целевого гена). Треки — из ENCODE, GTEx, FANTOM5; для каждого трека Атлас отдаёт предсказанный сдвиг и квантиль — ранг этого сдвига на фоне ~300 000 частых вариантов генома (MAF &gt; 0,01, gnomAD), знак показывает направление. Разбиение 711 образцов на 12 систем — по названиям биообразцов, вручную проверенными правилами; спорные случаи (клеточные линии опухолей) отнесены к органу происхождения.</p>
     <details class="srcs"><summary>Источники</summary><ol>%%SOURCES%%</ol></details>
   </div>
   <div>
@@ -239,6 +239,7 @@ const OTHERS=%%OTHERS%%;
 const SYS=DATA.systems, MODS=Object.keys(DATA.modalities), MODN=DATA.modalities;
 const MODSHORT={DNASE:'DNase',ATAC:'ATAC',CHIP_HISTONE:'Гистоны',CHIP_TF:'Белки',CAGE:'Старт',RNA_SEQ:'РНК'};
 const NS='http://www.w3.org/2000/svg';
+const plural=(n,one,few,many)=>{const m10=n%10,m100=n%100;return m10===1&&m100!==11?one:m10>=2&&m10<=4&&(m100<12||m100>14)?few:many};
 const el=(n,a={},p)=>{const e=document.createElementNS(NS,n);for(const k in a)e.setAttribute(k,a[k]);p&&p.appendChild(e);return e};
 const tip=document.getElementById('tip');
 function showTip(h,x,y,cls){tip.className='tip'+(cls?' '+cls:'');tip.innerHTML=h;tip.style.left=Math.min(Math.max(150,x),innerWidth-150)+'px';tip.style.top=y+'px';tip.style.opacity=1}
@@ -267,7 +268,7 @@ function ring(host,gid,mod,opts={}){
     const ra=R0-L*.02;el('path',{d:arc(cx,cy,R0+L*1.42,a0,a0+w),class:'sysarc'},svg);
     if(labels){const am=a0+w/2,rl=R0+L*1.5;const x=cx+Math.cos(am)*rl,y=cy+Math.sin(am)*rl;const t=el('text',{x,y:y+4,class:'syslab'+(g.s===hot?' hot':''),'text-anchor':Math.cos(am)>.06?'start':Math.cos(am)<-.06?'end':'middle'},svg);t.textContent=g.s.replace(' и ',' и ')+(opts.counts?' · '+g.items.length:'');}
     a+=w+gap});
-  if(labels){const c=document.createElement('div');c.className='ring-title';c.innerHTML=`<div class="g">${META[gid][0]}</div><div class="m">${MODN[mod]}</div><div class="n">${N} треков · ${META[gid][2]}</div>`;host.appendChild(c)}
+  if(labels){const c=document.createElement('div');c.className='ring-title';c.innerHTML=`<div class="g">${META[gid][0]}</div><div class="m">${MODN[mod]}</div><div class="n">${N} ${plural(N,'трек','трека','треков')} · ${META[gid][2]}</div>`;host.appendChild(c)}
   /* hover: nearest by angle */
   if(opts.interactive!==false){let hl=null;
     svg.addEventListener('mousemove',e=>{const r=svg.getBoundingClientRect();const full=size+2*pad;const px=(e.clientX-r.left)/r.width*full-pad-cx,py=(e.clientY-r.top)/r.height*full-pad-cy;const d=Math.hypot(px,py);if(d<R0-L*1.3||d>R0+L*1.5){hideTip();hl&&hl.remove();hl=null;return}

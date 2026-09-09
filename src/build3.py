@@ -36,7 +36,8 @@ page = r'''<!doctype html>
   .hero h1{font:400 clamp(44px,6.5vw,92px)/1 var(--serif);letter-spacing:-.02em;margin:0 0 22px} .hero h1 em{font-style:italic;color:var(--accent)}
   .hero p{font:19px/1.5 var(--serif);color:var(--ink-2);margin:0;max-width:560px}
   .hero .nums{display:grid;grid-template-columns:repeat(4,auto);gap:10px 28px;justify-content:start;margin-top:26px}
-  .hero .nums b{display:block;font:400 34px/1 var(--serif);letter-spacing:-.02em} .hero .nums span{font:11px var(--mono);letter-spacing:.08em;text-transform:uppercase;color:var(--ink-3)}
+  .hero .nums b{display:block;font:400 34px/1 var(--serif);letter-spacing:-.02em;white-space:nowrap;font-variant-numeric:tabular-nums} .hero .nums span{font:11px var(--mono);letter-spacing:.08em;text-transform:uppercase;color:var(--ink-3);white-space:nowrap}
+  .mednote{font:12px/1.5 var(--mono);color:var(--ink-3);margin-top:20px;max-width:520px}
   .hero .nums i{display:inline-block;width:10px;height:10px;border-radius:2px;margin-right:6px;vertical-align:-1px}
   .c-P{background:var(--ink)} .c-B{background:var(--down)} .c-VUS{background:var(--accent)} .c-conflict{background:var(--ink-3)}
   .intro{padding:60px clamp(20px,6vw,90px) 50px;border-top:1px solid var(--line);display:grid;grid-template-columns:minmax(0,640px);gap:28px}
@@ -85,7 +86,7 @@ page = r'''<!doctype html>
   .method h5{font:12px var(--mono);letter-spacing:.12em;text-transform:uppercase;color:var(--ink);margin:0 0 10px} .method p{margin:0 0 10px}
   .srcs{font:13px var(--sans);color:var(--ink-2)} .srcs ol{margin:8px 0 0;padding-left:18px;display:grid;gap:4px} .srcs a{color:var(--ink-2);text-decoration:none;border-bottom:1px solid var(--line)}
   .tag{position:fixed;right:14px;bottom:14px;z-index:50;font:11px/1 var(--mono);letter-spacing:.08em;text-transform:uppercase;background:var(--ink);color:var(--paper);padding:8px 10px;border-radius:2px;opacity:.85}
-  @media (max-width:1000px){.hero,.thr-grid,.vgrid,.method{grid-template-columns:1fr}.hero .nums{grid-template-columns:1fr 1fr}}
+  @media (max-width:1000px){.hero,.thr-grid,.vgrid,.method{grid-template-columns:1fr}.hero .nums{grid-template-columns:1fr 1fr}.hero .nums b{font-size:28px}}
   @media (max-width:700px){.intro-block{grid-template-columns:1fr;gap:6px}}
 </style></head>
 <body>
@@ -101,6 +102,7 @@ page = r'''<!doctype html>
       <div><b>%%N_V%%</b><span><i class="c-VUS"></i>неопределённых</span></div>
       <div><b>%%N_C%%</b><span><i class="c-conflict"></i>противоречивых</span></div>
     </div>
+    <div class="mednote">Всё на этой странице — предсказания модели и открытые данные, не медицинская информация. Вердикт по конкретному варианту выносит врач-генетик.</div>
   </div>
   <div id="heroViz"></div>
 </section>

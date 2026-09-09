@@ -11,7 +11,8 @@
   .hero h1{font:400 clamp(44px,6.5vw,92px)/1 var(--serif);letter-spacing:-.02em;margin:0 0 22px} .hero h1 em{font-style:italic;color:var(--accent)}
   .hero p{font:19px/1.5 var(--serif);color:var(--ink-2);margin:0;max-width:560px}
   .hero .nums{display:grid;grid-template-columns:repeat(4,auto);gap:10px 28px;justify-content:start;margin-top:26px}
-  .hero .nums b{display:block;font:400 34px/1 var(--serif);letter-spacing:-.02em} .hero .nums span{font:11px var(--mono);letter-spacing:.08em;text-transform:uppercase;color:var(--ink-3)}
+  .hero .nums b{display:block;font:400 34px/1 var(--serif);letter-spacing:-.02em;white-space:nowrap;font-variant-numeric:tabular-nums} .hero .nums span{font:11px var(--mono);letter-spacing:.08em;text-transform:uppercase;color:var(--ink-3);white-space:nowrap}
+  .mednote{font:12px/1.5 var(--mono);color:var(--ink-3);margin-top:20px;max-width:520px}
   .hero .nums i{display:inline-block;width:10px;height:10px;border-radius:2px;margin-right:6px;vertical-align:-1px}
   .c-P{background:var(--ink)} .c-B{background:var(--down)} .c-VUS{background:var(--accent)} .c-conflict{background:var(--ink-3)}
   .intro{padding:60px clamp(20px,6vw,90px) 50px;border-top:1px solid var(--line);display:grid;grid-template-columns:minmax(0,640px);gap:28px}
@@ -60,7 +61,7 @@
   .method h5{font:12px var(--mono);letter-spacing:.12em;text-transform:uppercase;color:var(--ink);margin:0 0 10px} .method p{margin:0 0 10px}
   .srcs{font:13px var(--sans);color:var(--ink-2)} .srcs ol{margin:8px 0 0;padding-left:18px;display:grid;gap:4px} .srcs a{color:var(--ink-2);text-decoration:none;border-bottom:1px solid var(--line)}
   .tag{position:fixed;right:14px;bottom:14px;z-index:50;font:11px/1 var(--mono);letter-spacing:.08em;text-transform:uppercase;background:var(--ink);color:var(--paper);padding:8px 10px;border-radius:2px;opacity:.85}
-  @media (max-width:1000px){.hero,.thr-grid,.vgrid,.method{grid-template-columns:1fr}.hero .nums{grid-template-columns:1fr 1fr}}
+  @media (max-width:1000px){.hero,.thr-grid,.vgrid,.method{grid-template-columns:1fr}.hero .nums{grid-template-columns:1fr 1fr}.hero .nums b{font-size:28px}}
   @media (max-width:700px){.intro-block{grid-template-columns:1fr;gap:6px}}
 </style><link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 16 16%22><rect width=%2216%22 height=%2216%22 fill=%22%23f5f2ec%22/><circle cx=%228%22 cy=%228%22 r=%224.5%22 fill=%22%23c4901e%22/></svg>">
 
@@ -74,11 +75,19 @@
   .pnav a.item.on{color:var(--ink,#17160f);box-shadow:inset 0 -2px 0 var(--accent,#c4901e)}
   .pnav .sp{flex:1}
   .pnav .meta{padding:16px clamp(20px,6vw,90px) 16px 22px;color:var(--ink-3,#9a968a);white-space:nowrap}
-  @media (max-width:900px){.pnav{flex-wrap:wrap}.pnav .meta{display:none}.pnav a.item{padding:12px 14px}.pnav .brand{padding:12px 20px;border-right:0;width:100%;border-bottom:1px solid var(--line,#d8d3c7)}}
+  @media (max-width:1620px){.pnav .meta{display:none}}
+  @media (max-width:1220px){.pnav a.item{padding:16px 14px}}
+  @media (max-width:1080px) and (min-width:901px){.pnav a.item .t{display:none}}
+  @media (max-width:900px){.pnav{flex-wrap:wrap}.pnav a.item{padding:12px 14px}.pnav .brand{padding:12px 20px;border-right:0;width:100%;border-bottom:1px solid var(--line,#d8d3c7)}}
+  .pnext{border-top:1px solid var(--ink,#17160f);background:var(--paper,#f5f2ec)}
+  .pnext a{display:flex;flex-wrap:wrap;justify-content:space-between;align-items:baseline;gap:10px 30px;padding:30px clamp(20px,6vw,90px) 60px;text-decoration:none}
+  .pnext .lbl{font:12px var(--mono,Menlo,monospace);letter-spacing:.12em;text-transform:uppercase;color:var(--ink-3,#9a968a)}
+  .pnext .ttl{font:400 clamp(26px,3.4vw,44px)/1.1 var(--serif,Georgia,serif);letter-spacing:-.02em;color:var(--ink,#17160f);transition:color .2s}
+  .pnext a:hover .ttl{color:var(--accent,#c4901e)}
 </style>
 </head>
 <body>
-<nav class="pnav"><a class="brand" href="index.html"><i></i>Карта невозможного</a><a class="item" href="genes.html"><b>01</b>Гены, о которых вы слышали</a><a class="item" href="tissues.html"><b>02</b>Одна мутация, сорок тканей</a><a class="item on" href="brca1.html"><b>03</b>Одиннадцать тысяч приговоров</a><a class="item" href="finale.html"><b>04</b>Чего никто не видел</a><span class="sp"></span><span class="meta">AlphaGenome Atlas · 2026</span></nav>
+<nav class="pnav"><a class="brand" href="index.html"><i></i>Карта невозможного</a><a class="item" href="genes.html"><b>01</b><span class="t">Гены, о которых вы слышали</span></a><a class="item" href="tissues.html"><b>02</b><span class="t">Одна мутация, сорок тканей</span></a><a class="item on" href="brca1.html"><b>03</b><span class="t">Одиннадцать тысяч приговоров</span></a><a class="item" href="finale.html"><b>04</b><span class="t">Чего никто не видел</span></a><span class="sp"></span><span class="meta">AlphaGenome Atlas · 2026</span></nav>
 <div class="tag">данные: AlphaGenome Atlas + ClinVar · черновик</div>
 <div class="tip" id="tip"></div>
 <section class="hero">
@@ -91,6 +100,7 @@
       <div><b>2 227</b><span><i class="c-VUS"></i>неопределённых</span></div>
       <div><b>2 869</b><span><i class="c-conflict"></i>противоречивых</span></div>
     </div>
+    <div class="mednote">Всё на этой странице — предсказания модели и открытые данные, не медицинская информация. Вердикт по конкретному варианту выносит врач-генетик.</div>
   </div>
   <div id="heroViz"></div>
 </section>
@@ -102,7 +112,7 @@
   <p class="lead">Каждая чёрточка — одна замена; чем правее, тем сильнее модель считает её разрушительной. Ось растянута логарифмически: на правом краю — верхняя тысячная доля всех замен генома. Патогенные замены (по клинике) сгрудились у правой стены: половина из них — в верхней тысячной. Доброкачественные размазаны по всей ширине, но с длинным хвостом вправо — BRCA1 весь целиком консервативен, и даже безобидные замены в нём модель не считает пустыми. Неопределённые и противоречивые лежат посередине — ровно там, где им и положено.</p>
   <div class="toggle" id="starToggle"><button data-s="0" class="on">Все вердикты</button><button data-s="2">Две звезды и выше</button><button data-s="3">Только экспертная комиссия</button></div>
   <div id="barcodeViz"></div>
-  <p class="lead dim" style="margin-top:22px">Если оставить только три звезды — 1 575 замен, по которым высказалась экспертная комиссия ENIGMA, — картина становится почти хирургической: <span class="term" tabindex="0" data-t="AUC (площадь под ROC-кривой)" data-d="Вероятность того, что случайная патогенная замена получит от модели оценку выше, чем случайная доброкачественная. 0,5 — монетка, 1,0 — идеал.">площадь под кривой</span> 0,999. Из 549 патогенных по мнению экспертов замен ни одна не опустилась ниже квантиля 0,995. Модель, которая никогда не видела ClinVar, ни разу не назвала безобидным то, что консилиум назвал опасным.</p>
+  <p class="lead dim" style="margin-top:22px">Если оставить только три звезды — 1 575 замен, по которым высказалась экспертная комиссия ENIGMA, — картина становится почти хирургической: <span class="term" tabindex="0" data-t="AUC (площадь под ROC-кривой)" data-d="Вероятность того, что случайная патогенная замена получит от модели оценку выше, чем случайная доброкачественная. 0,5 — монетка, 1,0 — идеал.">площадь под кривой</span> 0,999. Из 549 патогенных по мнению экспертов замен ни одна не опустилась ниже квантиля 0,995. Модель, которая никогда не видела ClinVar, ни разу не назвала безобидным то, что консилиум назвал опасным. Звучит как чистая победа — но насколько чист сам экзамен, мы ещё спросим: этому посвящена четвёртая история.</p>
 </section>
 
 <section class="blk" id="threshold">
@@ -237,4 +247,5 @@ document.querySelectorAll('#starToggle button').forEach(b=>b.onclick=()=>{docume
   document.addEventListener('mouseover',e=>{const t=e.target.closest('.term');if(t)show(t)});document.addEventListener('mouseout',e=>{if(e.target.closest('.term'))hide()});
   document.addEventListener('click',e=>{const t=e.target.closest('.term');if(t){pinned=pinned===t?null:t;if(pinned)show(t);else hide()}else if(pinned){pinned=null;hide()}});addEventListener('scroll',()=>{if(pinned){pinned=null;hide()}},{passive:true})})();
 </script>
+<footer class="pnext"><a href="finale.html"><span class="lbl">Дальше · история 04</span><span class="ttl">Чего никто не видел →</span></a></footer>
 </body></html>

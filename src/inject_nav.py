@@ -21,16 +21,35 @@ NAV_CSS = '''
   .pnav a.item.on{color:var(--ink,#17160f);box-shadow:inset 0 -2px 0 var(--accent,#c4901e)}
   .pnav .sp{flex:1}
   .pnav .meta{padding:16px clamp(20px,6vw,90px) 16px 22px;color:var(--ink-3,#9a968a);white-space:nowrap}
-  @media (max-width:900px){.pnav{flex-wrap:wrap}.pnav .meta{display:none}.pnav a.item{padding:12px 14px}.pnav .brand{padding:12px 20px;border-right:0;width:100%;border-bottom:1px solid var(--line,#d8d3c7)}}
+  @media (max-width:1620px){.pnav .meta{display:none}}
+  @media (max-width:1220px){.pnav a.item{padding:16px 14px}}
+  @media (max-width:1080px) and (min-width:901px){.pnav a.item .t{display:none}}
+  @media (max-width:900px){.pnav{flex-wrap:wrap}.pnav a.item{padding:12px 14px}.pnav .brand{padding:12px 20px;border-right:0;width:100%;border-bottom:1px solid var(--line,#d8d3c7)}}
+  .pnext{border-top:1px solid var(--ink,#17160f);background:var(--paper,#f5f2ec)}
+  .pnext a{display:flex;flex-wrap:wrap;justify-content:space-between;align-items:baseline;gap:10px 30px;padding:30px clamp(20px,6vw,90px) 60px;text-decoration:none}
+  .pnext .lbl{font:12px var(--mono,Menlo,monospace);letter-spacing:.12em;text-transform:uppercase;color:var(--ink-3,#9a968a)}
+  .pnext .ttl{font:400 clamp(26px,3.4vw,44px)/1.1 var(--serif,Georgia,serif);letter-spacing:-.02em;color:var(--ink,#17160f);transition:color .2s}
+  .pnext a:hover .ttl{color:var(--accent,#c4901e)}
 </style>
 '''
 def nav_html(cur):
-    items = ''.join(f'<a class="item{" on" if key==cur else ""}" href="{f}"><b>{i:02d}</b>{t}</a>' for i, (f, key, t) in enumerate(PAGES[1:], 1))
+    items = ''.join(f'<a class="item{" on" if key==cur else ""}" href="{f}"><b>{i:02d}</b><span class="t">{t}</span></a>' for i, (f, key, t) in enumerate(PAGES[1:], 1))
     return f'<nav class="pnav"><a class="brand" href="index.html"><i></i>Карта невозможного</a>{items}<span class="sp"></span><span class="meta">AlphaGenome Atlas · 2026</span></nav>'
+
+def next_html(cur):
+    keys = [k for _, k, _ in PAGES]
+    i = keys.index(cur)
+    if cur == 'index':
+        return ''
+    if cur == 'finale':
+        return '<footer class="pnext"><a href="index.html"><span class="lbl">Конец · все четыре истории</span><span class="ttl">К оглавлению →</span></a></footer>'
+    f, _, t = PAGES[i + 1]
+    return f'<footer class="pnext"><a href="{f}"><span class="lbl">Дальше · история {i + 1:02d}</span><span class="ttl">{t} →</span></a></footer>'
 
 def inject(path, key):
     s = open(path, encoding='utf-8').read()
     s = re.sub(r'<nav class="pnav">.*?</nav>', '', s, count=1, flags=re.S)
+    s = re.sub(r'<footer class="pnext">.*?</footer>\n?', '', s, count=1, flags=re.S)
     s = re.sub(r'<style>\n  \.pnav\{.*?</style>\n', '', s, count=1, flags=re.S)
     # старые мастхеды
     s = re.sub(r'<div class="masthead">.*?</div>\n', '', s, count=1, flags=re.S)
@@ -38,6 +57,9 @@ def inject(path, key):
         s = s.replace('</head>', FAVICON + '</head>', 1)
     s = s.replace('</head>', NAV_CSS + '</head>', 1)
     s = s.replace('<body>', '<body>\n' + nav_html(key), 1)
+    nxt = next_html(key)
+    if nxt:
+        s = s.replace('</body>', nxt + '\n</body>', 1)
     open(path, 'w', encoding='utf-8').write(s)
 
 INDEX = '''<!doctype html>
@@ -59,6 +81,7 @@ INDEX = '''<!doctype html>
   .hero canvas{width:100%;height:auto;display:block}
   .essay{padding:50px clamp(20px,6vw,90px) 40px;border-top:1px solid var(--line);display:grid;grid-template-columns:minmax(0,660px);gap:26px}
   .blk{display:grid;grid-template-columns:150px 1fr;gap:20px;align-items:start}
+  .blk>*{grid-column:2} .blk h5{grid-column:1;grid-row:1}
   .blk h5{font:12px/1.6 var(--mono);letter-spacing:.12em;text-transform:uppercase;color:var(--accent);margin:4px 0 0}
   .blk p{font:17px/1.6 var(--serif);margin:0 0 12px} .blk p:last-child{margin:0}
   .genes{display:flex;flex-wrap:wrap;gap:6px 8px;margin:8px 0 0}
@@ -92,7 +115,7 @@ INDEX = '''<!doctype html>
 
 <section class="essay">
   <div class="blk"><h5>С чего всё началось</h5>
-    <p>Внутри каждой вашей клетки лежит текст длиной в три миллиарда букв, и в нём, как в любом тексте, бывают опечатки. У любых двух людей их миллионы. Почти все — ничего не значат. Но некоторые решают, перевариваете ли вы молоко, краснеете ли от вина и заболеете ли раком к сорока. Беда в том, что заранее отличить пустую опечатку от важной было почти невозможно: буква посреди гена может оказаться безобидной, а буква в тысячах позиций от него — ключевой.</p>
+    <p>Внутри каждой вашей клетки лежит текст длиной в три миллиарда букв, и в нём, как в любом тексте, бывают опечатки. У любых двух людей их миллионы. Почти все — ничего не значат. Но некоторые решают, перевариваете ли вы молоко, краснеете ли от вина — и не вырастет ли в разы риск рака груди. Беда в том, что заранее отличить пустую опечатку от важной было почти невозможно: буква посреди гена может оказаться безобидной, а буква в тысячах позиций от него — ключевой.</p>
     <p>В 2026 году DeepMind сделала то, чего нельзя сделать руками: взяла каждую из трёх миллиардов позиций генома, подставила в неё каждую из трёх «не тех» букв — девять миллиардов опечаток — и прогнала через модель AlphaGenome, которая предсказывает, что каждая из них меняет в работе клетки. Результат, петабайт предсказаний, выложили в открытый доступ под именем AlphaGenome Atlas. Мы прочитали его так, как читают большой архив: не целиком, а с вопросами.</p></div>
   <div class="blk"><h5>Почему эти гены</h5>
     <p>Мы не учёные — мы аналитики, и нам хотелось начать с генов, о которых говорят не в лаборатории, а за столом. «Ген кофе», «ген молока», «ген, из-за которого краснеют от вина», «ген спринтера», «ген кинзы». Про каждый из них есть популярная легенда и есть настоящий вариант с номером в базе. Мы взяли десять таких — и спросили у модели, что она думает о каждом. Половина легенд подтвердилась, а две модель попросту не заметила. Это стало первой историей и заодно проверкой на честность: мы обещали не подгонять картинку под легенду.</p>
@@ -117,6 +140,7 @@ INDEX = '''<!doctype html>
   <div><h5>Как читать наши графики</h5><p>Главная шкала везде одна — квантиль AVI: доля из девяти миллиардов замен генома, которые модель считает менее разрушительными, чем данную. 0,99 — «сильнее 99 % генома». Это не «вредно для здоровья», это «сильно меняет молекулярную работу участка».</p><p><span class="sw" style="background:var(--ink)"></span>чернила — данные и патогенное, <span class="sw" style="background:var(--accent)"></span>золото — знаменитый вариант, усиление, неопределённость, <span class="sw" style="background:var(--down)"></span>бирюза — ослабление и доброкачественное.</p></div>
   <div><h5>Что это и что это не</h5><p>Это портфолио-проект аналитика, а не научная публикация и не медицинская информация. Все числа — предсказания модели, полученные через AlphaGenome Atlas API, а не результаты экспериментов. Все тексты прошли фактчек по первоисточникам; ссылки — в конце каждой истории. Там же, честно, — где модель ошибается и чего она не знает.</p></div>
   <div><h5>Как сделано</h5><p>Python-скрипты забирают данные из Atlas API, Ensembl и ClinVar, собирают JSON и вшивают его в самодостаточные HTML-страницы без внешних зависимостей. Визуализации — рукописный SVG и canvas: точечные матрицы, кольцо, штрих-код. Исходники и данные приложены к каждой истории, ключ API — нет.</p></div>
+  <div><h5>Данные и лицензии</h5><p>AlphaGenome Atlas (Google DeepMind) — некоммерческое использование; ClinVar (NIH), gnomAD v4.1 (Broad), Ensembl (EMBL-EBI) — открытые данные; эксперимент Findlay et al. 2018 — MaveDB, CC BY-NC-SA. Код и данные проекта: <a href="https://github.com/cosmiksoul/genomeatlas" style="color:inherit">github.com/cosmiksoul/genomeatlas</a>. Сайт без рекламы и не связан с работодателем автора.</p></div>
 </section>
 <script>
 (function(){const c=document.getElementById('field'),ctx=c.getContext('2d');const W=c.width,H=c.height;let t0=performance.now();

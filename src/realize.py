@@ -152,6 +152,7 @@ s = s.replace('  /* NAV */', '''  .strip-wrap{position:relative;margin:6px 0 4px
   .model{border-left:2px solid var(--accent);padding-left:16px;margin:8px 0 6px}
   .model .eyebrow{margin-bottom:6px}
   /* NAV */''', 1)
+s = s.replace('<title>Гены, о которых вы слышали — макет</title>', '<title>Гены, о которых вы слышали</title>')
 s = s.replace('<div class="mock-tag">макет · данные иллюстративные</div>', '<div class="mock-tag">данные: AlphaGenome Atlas · черновик</div>')
 s = re.sub(r'<h5>Что здесь макет</h5>.*?</div>\n</section>', '''<h5>Как мы это считали</h5>
     <p>Для каждого из десяти вариантов через AlphaGenome Atlas API запрошены все однобуквенные замены в окне ±5 000 букв — по 30 000 на ген, 300 000 всего — с оценкой AVI, её квантилем относительно всех ~9 млрд замен генома и разложением на 18 признаков. Для знаменитого варианта дополнительно — предсказанный сдвиг экспрессии целевого гена по 371 треку тканей и клеточных линий. Структуры генов — Ensembl (канонические транскрипты, GRCh38).</p>
