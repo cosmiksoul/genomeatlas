@@ -79,6 +79,8 @@ page = r'''<!doctype html>
   /* scatter */
   .sc .pt{opacity:.55} .sc .pt.func{fill:var(--down)} .sc .pt.nonfunc{fill:var(--ink)} .sc .pt.inter{fill:var(--accent)}
   .kpis{display:grid;grid-template-columns:repeat(3,1fr);gap:14px;margin:18px 0}
+  .labh{display:grid;grid-template-columns:minmax(0,620px) minmax(300px,440px);justify-content:space-between;gap:26px clamp(40px,6vw,120px);align-items:end;margin-bottom:34px}
+  .kpis.kpis-side{grid-template-columns:1fr;gap:20px;margin:0}
   .kpi{border-top:1px solid var(--ink);padding-top:8px} .kpi b{display:block;font:400 40px/1 var(--serif);letter-spacing:-.02em} .kpi span{font:11px var(--mono);letter-spacing:.08em;text-transform:uppercase;color:var(--ink-3)} .kpi small{display:block;font:12px var(--sans);color:var(--ink-2);margin-top:4px}
   .exl h4{font:12px var(--mono);letter-spacing:.12em;text-transform:uppercase;color:var(--ink-2);margin:16px 0 8px} .exl div{display:flex;justify-content:space-between;gap:10px;font:12.5px var(--mono);border-bottom:1px dotted var(--line);padding:4px 0} .exl div b{font-weight:400;color:var(--ink-3)}
   /* circular diagram */
@@ -86,11 +88,15 @@ page = r'''<!doctype html>
   .close{padding:90px clamp(20px,6vw,90px);border-top:1px solid var(--ink);background:var(--paper-2)}
   .close h2{font:400 clamp(36px,5vw,72px)/1 var(--serif);letter-spacing:-.02em;margin:0 0 26px;max-width:900px} .close h2 em{font-style:italic;color:var(--accent)}
   .close p{font:19px/1.6 var(--serif);max-width:720px;margin:0}
+  .close-grid{display:grid;grid-template-columns:minmax(0,760px) minmax(280px,420px);justify-content:space-between;gap:44px clamp(40px,7vw,140px);align-items:center}
+  .coda .waffle{max-width:none;gap:2px}
+  .close .coda-cap{font:13.5px/1.55 var(--sans);color:var(--ink-2);max-width:none;margin:16px 0 0}
+  .close .coda-cap b{font:400 12px var(--mono);letter-spacing:.04em;color:var(--ink)}
   .method{padding:60px clamp(20px,6vw,90px) 80px;border-top:1px solid var(--line);display:grid;grid-template-columns:1fr 1fr;gap:40px;font-size:14px;color:var(--ink-2)}
   .method h5{font:12px var(--mono);letter-spacing:.12em;text-transform:uppercase;color:var(--ink);margin:0 0 10px} .method p{margin:0 0 10px}
   .srcs{font:13px var(--sans);color:var(--ink-2)} .srcs ol{margin:8px 0 0;padding-left:18px;display:grid;gap:4px} .srcs a{color:var(--ink-2);text-decoration:none;border-bottom:1px solid var(--line)}
   .tag{position:fixed;right:14px;bottom:14px;z-index:50;font:11px/1 var(--mono);letter-spacing:.08em;text-transform:uppercase;background:var(--ink);color:var(--paper);padding:8px 10px;border-radius:2px;opacity:.85}
-  @media (max-width:1000px){.hero,.two,.method{grid-template-columns:1fr}.kpis{grid-template-columns:1fr}.waffle{grid-template-columns:repeat(25,1fr)}}
+  @media (max-width:1000px){.hero,.two,.method,.labh,.close-grid{grid-template-columns:1fr}.kpis{grid-template-columns:1fr}.waffle{grid-template-columns:repeat(25,1fr)}.coda .waffle{max-width:440px}}
   @media (max-width:700px){.intro-block{grid-template-columns:1fr;gap:6px}.gbars .row{grid-template-columns:70px 1fr 50px}.gbars .row .t2{display:none}}
 </style></head>
 <body>
@@ -146,9 +152,10 @@ page = r'''<!doctype html>
 </section>
 
 <section class="blk" id="lab">
-  <h2>Против пробирки</h2>
-  <p class="lead">%%S_LAB%%</p>
-  <div class="kpis"><div class="kpi"><b>%%AUC%%</b><span>согласие с экспериментом</span><small>AUC, %%NSGE%% замен, «нефункциональные» против «функциональных»</small></div><div class="kpi"><b>%%AUCM%%</b><span>по миссенс-заменам</span><small>%%NMIS%% замен аминокислот — самый трудный класс</small></div><div class="kpi"><b>0,999</b><span>согласие с комиссией</span><small>для сравнения — из третьей истории</small></div></div>
+  <div class="labh">
+    <div><h2>Против пробирки</h2><p class="lead" style="margin-bottom:0">%%S_LAB%%</p></div>
+    <div class="kpis kpis-side"><div class="kpi"><b>%%AUC%%</b><span>согласие с экспериментом</span><small>AUC, %%NSGE%% замен, «нефункциональные» против «функциональных»</small></div><div class="kpi"><b>%%AUCM%%</b><span>по миссенс-заменам</span><small>%%NMIS%% замен аминокислот — самый трудный класс</small></div><div class="kpi"><b>0,999</b><span>согласие с комиссией</span><small>для сравнения — из третьей истории</small></div></div>
+  </div>
   <div class="two">
     <div id="scatter"></div>
     <div class="exl"><h4>Клетки говорят «сломано», модель — «почти ничего»</h4>%%EX1%%<h4>Клетки говорят «работает», модель — «верхняя тысячная»</h4>%%EX2%%</div>
@@ -163,8 +170,16 @@ page = r'''<!doctype html>
 </section>
 
 <section class="close">
-  <h2>Карта — не территория. <em>Хорошая карта</em> — всё равно не территория.</h2>
-  <p>%%S_CLOSE%%</p>
+  <div class="close-grid">
+    <div>
+      <h2>Карта — не территория. <em>Хорошая карта</em> — всё равно не территория.</h2>
+      <p>%%S_CLOSE%%</p>
+    </div>
+    <aside class="coda">
+      <div class="waffle" id="waffleCoda"></div>
+      <p class="coda-cap"><b>872 из 1 000</b> квадратов BRCA1 существуют только внутри модели. Та же тысяча, с которой началась эта история.</p>
+    </aside>
+  </div>
 </section>
 
 <section class="method">
@@ -192,7 +207,8 @@ ladder(document.getElementById('ladderTop'),[['в верхнем 1 %',F.top1,'']
   let s=7;const r=()=>{s=(s*9301+49297)%233280;return s/233280};const idx=[...Array(n).keys()];for(let i=n-1;i>0;i--){const j=Math.floor(r()*(i+1));[idx[i],idx[j]]=[idx[j],idx[i]]}
   const cls=new Array(n).fill('');idx.slice(0,cnt.o).forEach(i=>cls[i]='o');idx.slice(0,cnt.c).forEach(i=>cls[i]='c');idx.slice(0,cnt.l).forEach(i=>cls[i]='l');idx.slice(0,cnt.e).forEach(i=>cls[i]='e');
   const names={'':'существует только в модели',o:'видели хотя бы у одного человека',c:'есть вердикт в ClinVar',l:'проверили в лаборатории (Findlay 2018)',e:'высказалась экспертная комиссия'};
-  cls.forEach((c,i)=>{const d=document.createElement('i');if(c)d.className=c;d.addEventListener('mousemove',e=>showTip(`≈ ${fmt(Math.round(per))} замен · <b>${names[c]}</b>`,e.clientX,e.clientY));d.addEventListener('mouseleave',hideTip);g.appendChild(d)});})();
+  const fill=host=>{if(!host)return;cls.forEach(c=>{const d=document.createElement('i');if(c)d.className=c;d.addEventListener('mousemove',e=>showTip(`≈ ${fmt(Math.round(per))} замен · <b>${names[c]}</b>`,e.clientX,e.clientY));d.addEventListener('mouseleave',hideTip);host.appendChild(d)})};
+  fill(g);fill(document.getElementById('waffleCoda'));})();
 /* genes bars */
 (function(){const h=document.getElementById('gbars');h.innerHTML='<div class="row"><span></span><span class="h">видели у людей, из 30 000</span><span></span><span class="h t2">видели среди верхнего 1 %</span><span class="t2"></span></div>'+D.genes.sort((a,b)=>b.observed-a.observed).map(g=>`<div class="row"><b>${g.gene}</b><div class="bar"><i style="width:${g.observed*100/0.35}%"></i></div><span class="v">${(g.observed*100).toFixed(0)} %</span><div class="bar t2"><i class="t" style="width:${g.top1_observed*100/0.45}%"></i></div><span class="v t2">${(g.top1_observed*100).toFixed(0)} %</span></div>`).join('')})();
 /* scatter */

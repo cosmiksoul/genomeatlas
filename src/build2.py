@@ -140,12 +140,14 @@ page = r'''<!doctype html>
 
   /* others */
   .others{padding:70px clamp(20px,6vw,90px);border-top:1px solid var(--line)}
-  .ogrid{display:grid;grid-template-columns:repeat(auto-fill,minmax(300px,1fr));gap:30px 28px}
-  .ocard{border-top:1px solid var(--ink);padding-top:12px;display:grid;grid-template-columns:120px 1fr;gap:14px;align-items:start;cursor:pointer}
+  .ogrid{display:grid;grid-template-columns:repeat(3,1fr);gap:44px clamp(28px,3.5vw,64px)}
+  .ocard{border-top:1px solid var(--ink);padding-top:14px;display:grid;grid-template-columns:minmax(140px,170px) 1fr;gap:18px;align-items:start;cursor:pointer}
   .ocard:hover .oh{color:var(--accent)}
-  .ocard .oh{font:600 13px var(--mono)} .ocard .oh small{display:block;font:11px var(--sans);font-weight:400;color:var(--ink-2)}
-  .ocard p{font:14px/1.5 var(--serif);color:var(--ink);margin:6px 0 0}
-  .ocard svg{width:120px;height:120px;display:block}
+  .ocard .oh{font:600 13px var(--mono)} .ocard .oh small{display:block;font:11px var(--sans);font-weight:400;color:var(--ink-2);margin-top:2px}
+  .ocard p{font:14px/1.55 var(--serif);color:var(--ink);margin:8px 0 0}
+  .ocard .thumb{width:100%} .ocard svg{width:100%;height:auto;display:block}
+  @media (max-width:1150px){.ogrid{grid-template-columns:repeat(2,1fr)}}
+  @media (max-width:640px){.ogrid{grid-template-columns:1fr}}
 
   .method{padding:60px clamp(20px,6vw,90px) 80px;border-top:1px solid var(--line);display:grid;grid-template-columns:1fr 1fr;gap:40px;font-size:14px;color:var(--ink-2)}
   .method h5{font:12px var(--mono);letter-spacing:.12em;text-transform:uppercase;color:var(--ink);margin:0 0 10px}

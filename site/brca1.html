@@ -8,6 +8,7 @@
   body{margin:0;background:var(--paper);color:var(--ink);font-family:var(--sans);font-size:15px;line-height:1.55;-webkit-font-smoothing:antialiased}
   a{color:inherit}
   .hero{padding:70px clamp(20px,6vw,90px) 40px;display:grid;grid-template-columns:minmax(300px,480px) minmax(0,1fr);gap:40px clamp(30px,5vw,90px);align-items:end}
+  #heroViz{align-self:center}
   .hero h1{font:400 clamp(44px,6.5vw,92px)/1 var(--serif);letter-spacing:-.02em;margin:0 0 22px} .hero h1 em{font-style:italic;color:var(--accent)}
   .hero p{font:19px/1.5 var(--serif);color:var(--ink-2);margin:0;max-width:560px}
   .hero .nums{display:grid;grid-template-columns:repeat(4,auto);gap:10px 28px;justify-content:start;margin-top:26px}
@@ -210,7 +211,7 @@ function barcode(host,opts={}){
     if(best&&bd<60){const p=best.__p;showTip(`${p[5]}<br><b>квантиль ${p[3].toFixed(4)} · AVI ${p[4].toFixed(2)}</b><br>${CLS[p[1]]} · ${CONS[p[2]]||p[2]} · ${stars(p[6])} · экзон ${p[7]||'—'}`,e.clientX,e.clientY)}else hideTip()});svg.addEventListener('mouseleave',hideTip)}
   return svg;
 }
-barcode(document.getElementById('heroViz'),{rowH:44,interactive:false});
+barcode(document.getElementById('heroViz'),{rowH:84,interactive:false});
 let minStar=0;function drawBarcode(){barcode(document.getElementById('barcodeViz'),{minStar})}
 drawBarcode();
 document.querySelectorAll('#starToggle button').forEach(b=>b.onclick=()=>{document.querySelectorAll('#starToggle button').forEach(x=>x.classList.toggle('on',x===b));minStar=+b.dataset.s;drawBarcode()});
