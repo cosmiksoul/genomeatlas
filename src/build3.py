@@ -40,8 +40,19 @@ page = r'''<!doctype html>
   .mednote{font:12px/1.5 var(--mono);color:var(--ink-3);margin-top:20px;max-width:520px}
   .hero .nums i{display:inline-block;width:10px;height:10px;border-radius:2px;margin-right:6px;vertical-align:-1px}
   .c-P{background:var(--ink)} .c-B{background:var(--down)} .c-VUS{background:var(--accent)} .c-conflict{background:var(--ink-3)}
-  .intro{padding:60px clamp(20px,6vw,90px) 50px;border-top:1px solid var(--line);display:grid;grid-template-columns:minmax(0,640px);gap:28px}
+  .intro{padding:60px clamp(20px,6vw,90px) 50px;border-top:1px solid var(--line);display:grid;grid-template-columns:minmax(0,640px) minmax(280px,380px);justify-content:space-between;gap:28px clamp(40px,6vw,120px)}
+  .intro-text{display:grid;gap:28px}
   .intro-block{display:grid;grid-template-columns:140px 1fr;gap:20px;align-items:start}
+  .scard{align-self:start;position:sticky;top:90px;border:1px solid var(--line);border-radius:3px;background:rgba(255,255,255,.35);padding:22px 24px 20px}
+  .scard h4{font:400 22px var(--serif);margin:0 0 4px}
+  .scard .sd{font:13px/1.5 var(--sans);color:var(--ink-2);margin:0 0 14px}
+  .scard .srow{display:flex;align-items:baseline;gap:10px;font:13px var(--sans);color:var(--ink-2);border-bottom:1px dotted var(--line);padding:7px 0}
+  .scard .srow:last-child{border-bottom:0}
+  .scard .srow i{width:11px;height:11px;border-radius:2px;flex:none;align-self:center}
+  .scard .srow b{font:12px var(--mono);font-weight:400;color:var(--ink);margin-left:auto;font-variant-numeric:tabular-nums}
+  .scard h5{font:11px var(--mono);letter-spacing:.12em;text-transform:uppercase;color:var(--accent);margin:18px 0 4px}
+  .scard .stars{color:var(--accent);letter-spacing:-1px;font-size:12px;flex:none}
+  @media (max-width:1200px){.intro{grid-template-columns:minmax(0,640px)}.scard{position:static}}
   .intro-block h5{font:12px/1.6 var(--mono);letter-spacing:.12em;text-transform:uppercase;color:var(--accent);margin:4px 0 0}
   .intro-block p{font:17px/1.6 var(--serif);color:var(--ink);margin:0} .intro-block:first-child p{font-size:21px;line-height:1.45}
   section.blk{padding:70px clamp(20px,6vw,90px);border-top:1px solid var(--line)}
@@ -107,7 +118,21 @@ page = r'''<!doctype html>
   <div id="heroViz"></div>
 </section>
 
-<section class="intro">%%INTRO%%</section>
+<section class="intro">
+  <div class="intro-text">%%INTRO%%</div>
+  <aside class="scard">
+    <h4>Шкала ClinVar</h4>
+    <p class="sd">Пять вердиктов, которые лаборатории выносят каждой найденной замене. В проекте они сгруппированы в четыре класса — цвета те же на всех графиках.</p>
+    <div class="srow"><i class="c-P"></i><span>патогенные и вероятно патогенные</span><b>%%N_P%%</b></div>
+    <div class="srow"><i class="c-B"></i><span>доброкачественные и вероятно</span><b>%%N_B%%</b></div>
+    <div class="srow"><i class="c-VUS"></i><span>неопределённого значения</span><b>%%N_V%%</b></div>
+    <div class="srow"><i class="c-conflict"></i><span>противоречивые</span><b>%%N_C%%</b></div>
+    <h5>Вес вердикта</h5>
+    <div class="srow"><span class="stars">★☆☆</span><span>одна лаборатория, без критериев</span></div>
+    <div class="srow"><span class="stars">★★☆</span><span>несколько лабораторий сошлись</span></div>
+    <div class="srow"><span class="stars">★★★</span><span>экспертная комиссия ENIGMA</span></div>
+  </aside>
+</section>
 
 <section class="blk" id="barcode">
   <h2>Штрих-код гена</h2>

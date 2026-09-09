@@ -130,7 +130,7 @@
   .chapter h2{font:400 clamp(36px,4.5vw,60px)/1.02 var(--serif);letter-spacing:-.02em;margin:0 0 6px}
   .chapter h2 small{display:block;font:italic 22px var(--serif);color:var(--ink-2);margin-top:8px}
   .chapter .lead{font:17px/1.55 var(--serif);color:var(--ink-2);margin:20px 0 26px}
-  .factrow{display:grid;grid-template-columns:1fr 1fr;gap:14px 20px;border-top:1px solid var(--line);padding-top:16px}
+  .factrow{display:grid;grid-template-columns:1fr 1fr;gap:14px 20px;border-top:1px solid var(--ink);border-bottom:1px solid var(--line);padding:16px 0 18px;margin:0 0 24px}
   .fact .k{font:11px var(--mono);letter-spacing:.1em;text-transform:uppercase;color:var(--ink-3)}
   .fact .v{font:15px var(--sans);margin-top:3px}
   .fact .v.mono{font-family:var(--mono);font-size:13px}
@@ -463,7 +463,7 @@ GENES.forEach((g,i)=>{
   s.innerHTML=`<div class="story">
       <div class="eyebrow"><span class="n">Глава ${i+1}</span> · ${g.name}</div>
       <h2>${g.title}<small>${g.sub}</small></h2>
-      <p class="lead">${g.lead}</p>${(STORY[g.id]||[]).map(t=>`<p class="body">${t}</p>`).join("")}<details class="srcs"><summary>Источники главы</summary><ol>${(SOURCES[g.id]||[]).map(([t,u])=>`<li><a href="${u}" target="_blank" rel="noopener">${t}</a></li>`).join("")}</ol></details>
+      <p class="lead">${g.lead}</p>
       <div class="factrow">
         <div class="fact"><div class="k">Вариант</div><div class="v mono">${g.rs}</div></div>
         <div class="fact"><div class="k">Замена</div><div class="v mono">${g.change}</div></div>
@@ -471,7 +471,7 @@ GENES.forEach((g,i)=>{
         <div class="fact"><div class="k">Где именно</div><div class="v">${g.where}</div></div>
         <div class="fact"><div class="k">Частота</div><div class="v">${g.freq}</div></div>
         <div class="fact"><div class="k">Разрушительных замен в гене</div><div class="v">${g.danger} %</div></div>
-      </div>
+      </div>${(STORY[g.id]||[]).map(t=>`<p class="body">${t}</p>`).join("")}<details class="srcs"><summary>Источники главы</summary><ol>${(SOURCES[g.id]||[]).map(([t,u])=>`<li><a href="${u}" target="_blank" rel="noopener">${t}</a></li>`).join("")}</ol></details>
     </div>
     <div class="panels">
       <div class="panel"><div class="panel-h"><h3>240 способов испортить этот участок</h3><span class="sub">80 позиций × 3 альтернативные буквы</span></div>

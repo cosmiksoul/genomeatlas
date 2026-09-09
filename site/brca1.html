@@ -15,8 +15,19 @@
   .mednote{font:12px/1.5 var(--mono);color:var(--ink-3);margin-top:20px;max-width:520px}
   .hero .nums i{display:inline-block;width:10px;height:10px;border-radius:2px;margin-right:6px;vertical-align:-1px}
   .c-P{background:var(--ink)} .c-B{background:var(--down)} .c-VUS{background:var(--accent)} .c-conflict{background:var(--ink-3)}
-  .intro{padding:60px clamp(20px,6vw,90px) 50px;border-top:1px solid var(--line);display:grid;grid-template-columns:minmax(0,640px);gap:28px}
+  .intro{padding:60px clamp(20px,6vw,90px) 50px;border-top:1px solid var(--line);display:grid;grid-template-columns:minmax(0,640px) minmax(280px,380px);justify-content:space-between;gap:28px clamp(40px,6vw,120px)}
+  .intro-text{display:grid;gap:28px}
   .intro-block{display:grid;grid-template-columns:140px 1fr;gap:20px;align-items:start}
+  .scard{align-self:start;position:sticky;top:90px;border:1px solid var(--line);border-radius:3px;background:rgba(255,255,255,.35);padding:22px 24px 20px}
+  .scard h4{font:400 22px var(--serif);margin:0 0 4px}
+  .scard .sd{font:13px/1.5 var(--sans);color:var(--ink-2);margin:0 0 14px}
+  .scard .srow{display:flex;align-items:baseline;gap:10px;font:13px var(--sans);color:var(--ink-2);border-bottom:1px dotted var(--line);padding:7px 0}
+  .scard .srow:last-child{border-bottom:0}
+  .scard .srow i{width:11px;height:11px;border-radius:2px;flex:none;align-self:center}
+  .scard .srow b{font:12px var(--mono);font-weight:400;color:var(--ink);margin-left:auto;font-variant-numeric:tabular-nums}
+  .scard h5{font:11px var(--mono);letter-spacing:.12em;text-transform:uppercase;color:var(--accent);margin:18px 0 4px}
+  .scard .stars{color:var(--accent);letter-spacing:-1px;font-size:12px;flex:none}
+  @media (max-width:1200px){.intro{grid-template-columns:minmax(0,640px)}.scard{position:static}}
   .intro-block h5{font:12px/1.6 var(--mono);letter-spacing:.12em;text-transform:uppercase;color:var(--accent);margin:4px 0 0}
   .intro-block p{font:17px/1.6 var(--serif);color:var(--ink);margin:0} .intro-block:first-child p{font-size:21px;line-height:1.45}
   section.blk{padding:70px clamp(20px,6vw,90px);border-top:1px solid var(--line)}
@@ -76,8 +87,8 @@
   .pnav .sp{flex:1}
   .pnav .meta{padding:16px clamp(20px,6vw,90px) 16px 22px;color:var(--ink-3,#9a968a);white-space:nowrap}
   @media (max-width:1620px){.pnav .meta{display:none}}
-  @media (max-width:1220px){.pnav a.item{padding:16px 14px}}
-  @media (max-width:1080px) and (min-width:901px){.pnav a.item .t{display:none}}
+  @media (max-width:1460px){.pnav a.item{padding:16px 14px}.pnav .brand{padding:16px 24px}}
+  @media (max-width:1250px) and (min-width:901px){.pnav a.item .t{display:none}}
   @media (max-width:900px){.pnav{flex-wrap:wrap}.pnav a.item{padding:12px 14px}.pnav .brand{padding:12px 20px;border-right:0;width:100%;border-bottom:1px solid var(--line,#d8d3c7)}}
   .pnext{border-top:1px solid var(--ink,#17160f);background:var(--paper,#f5f2ec)}
   .pnext a{display:flex;flex-wrap:wrap;justify-content:space-between;align-items:baseline;gap:10px 30px;padding:30px clamp(20px,6vw,90px) 60px;text-decoration:none}
@@ -105,7 +116,21 @@
   <div id="heroViz"></div>
 </section>
 
-<section class="intro"><div class="intro-block"><h5>Ген Анджелины</h5><p>В мае 2013 года Анджелина Джоли написала колонку в New York Times о том, почему удалила обе груди, будучи здоровой. У неё нашли опечатку в гене BRCA1 — и врачи оценили её риск рака груди в 87 процентов. Так один ген из двадцати тысяч стал самым известным в мире. BRCA1 чинит разрывы ДНК; когда он сломан, клетки груди и яичников копят повреждения, и рак приходит рано. Тест на BRCA1 сегодня делают миллионы женщин.</p></div><div class="intro-block"><h5>Как выносят приговор</h5><p>Каждая найденная опечатка попадает в <span class="term" tabindex="0" data-t="ClinVar" data-d="Открытая база NIH, куда лаборатории всего мира присылают свои классификации генетических вариантов. Более 3 млн записей.">ClinVar</span> — открытый мировой реестр, куда лаборатории присылают свои вердикты по пятибалльной шкале: патогенный, вероятно патогенный, <span class="term" tabindex="0" data-t="Вариант неопределённого значения (VUS)" data-d="Найденная замена, для которой недостаточно данных, чтобы назвать её опасной или безобидной. Самая частая и самая тяжёлая для пациента строчка отчёта.">неопределённого значения</span>, вероятно доброкачественный, доброкачественный. Вердикты бывают разной силы. Одна лаборатория без описанных критериев — одна звезда. Несколько лабораторий, которые сошлись, — две. Экспертная комиссия, для BRCA1 это международный консорциум <span class="term" tabindex="0" data-t="ENIGMA" data-d="Международный консорциум экспертов по BRCA1/BRCA2. Его вердикты в ClinVar имеют высший статус — «reviewed by expert panel», три звезды.">ENIGMA</span>, — три звезды, высший суд. Для BRCA1 в ClinVar 11 655 однобуквенных замен.</p></div><div class="intro-block"><h5>Проблема третьей строчки</h5><p>Самая тяжёлая для пациента строчка — «неопределённого значения». Это значит: у вас есть замена, которой нет в учебниках, мы не знаем, опасна ли она, живите с этим. У BRCA1 таких замен больше двух тысяч, и ещё почти три тысячи — «противоречивые», по которым лаборатории разошлись. Именно здесь от предсказательной модели ждут помощи: если она умеет отличать опасные замены от безобидных там, где ответ известен, ей можно доверить и те, где он неизвестен.</p></div><div class="intro-block"><h5>Что мы сделали</h5><p>Мы взяли все 389 859 возможных однобуквенных замен на всём протяжении гена BRCA1 — 130 тысяч букв — и запросили у Атласа оценку AVI и её <span class="term" tabindex="0" data-t="Квантиль AVI" data-d="Доля всех ~9 млрд замен генома, которые модель считает менее разрушительными, чем данную. 0,999 — «сильнее 99,9 % генома».">квантиль</span> для каждой. Затем наложили 11 650 записей ClinVar и для 9 592 замен с вердиктом сравнили мнение модели с мнением клиники. Модели не показывали ни одного вердикта: она видела только ДНК. Дальше — что из этого вышло, и где они расходятся.</p></div></section>
+<section class="intro">
+  <div class="intro-text"><div class="intro-block"><h5>Ген Анджелины</h5><p>В мае 2013 года Анджелина Джоли написала колонку в New York Times о том, почему удалила обе груди, будучи здоровой. У неё нашли опечатку в гене BRCA1 — и врачи оценили её риск рака груди в 87 процентов. Так один ген из двадцати тысяч стал самым известным в мире. BRCA1 чинит разрывы ДНК; когда он сломан, клетки груди и яичников копят повреждения, и рак приходит рано. Тест на BRCA1 сегодня делают миллионы женщин.</p></div><div class="intro-block"><h5>Как выносят приговор</h5><p>Каждая найденная опечатка попадает в <span class="term" tabindex="0" data-t="ClinVar" data-d="Открытая база NIH, куда лаборатории всего мира присылают свои классификации генетических вариантов. Более 3 млн записей.">ClinVar</span> — открытый мировой реестр, куда лаборатории присылают свои вердикты по пятибалльной шкале: патогенный, вероятно патогенный, <span class="term" tabindex="0" data-t="Вариант неопределённого значения (VUS)" data-d="Найденная замена, для которой недостаточно данных, чтобы назвать её опасной или безобидной. Самая частая и самая тяжёлая для пациента строчка отчёта.">неопределённого значения</span>, вероятно доброкачественный, доброкачественный. Вердикты бывают разной силы. Одна лаборатория без описанных критериев — одна звезда. Несколько лабораторий, которые сошлись, — две. Экспертная комиссия, для BRCA1 это международный консорциум <span class="term" tabindex="0" data-t="ENIGMA" data-d="Международный консорциум экспертов по BRCA1/BRCA2. Его вердикты в ClinVar имеют высший статус — «reviewed by expert panel», три звезды.">ENIGMA</span>, — три звезды, высший суд. Для BRCA1 в ClinVar 11 655 однобуквенных замен.</p></div><div class="intro-block"><h5>Проблема третьей строчки</h5><p>Самая тяжёлая для пациента строчка — «неопределённого значения». Это значит: у вас есть замена, которой нет в учебниках, мы не знаем, опасна ли она, живите с этим. У BRCA1 таких замен больше двух тысяч, и ещё почти три тысячи — «противоречивые», по которым лаборатории разошлись. Именно здесь от предсказательной модели ждут помощи: если она умеет отличать опасные замены от безобидных там, где ответ известен, ей можно доверить и те, где он неизвестен.</p></div><div class="intro-block"><h5>Что мы сделали</h5><p>Мы взяли все 389 859 возможных однобуквенных замен на всём протяжении гена BRCA1 — 130 тысяч букв — и запросили у Атласа оценку AVI и её <span class="term" tabindex="0" data-t="Квантиль AVI" data-d="Доля всех ~9 млрд замен генома, которые модель считает менее разрушительными, чем данную. 0,999 — «сильнее 99,9 % генома».">квантиль</span> для каждой. Затем наложили 11 650 записей ClinVar и для 9 592 замен с вердиктом сравнили мнение модели с мнением клиники. Модели не показывали ни одного вердикта: она видела только ДНК. Дальше — что из этого вышло, и где они расходятся.</p></div></div>
+  <aside class="scard">
+    <h4>Шкала ClinVar</h4>
+    <p class="sd">Пять вердиктов, которые лаборатории выносят каждой найденной замене. В проекте они сгруппированы в четыре класса — цвета те же на всех графиках.</p>
+    <div class="srow"><i class="c-P"></i><span>патогенные и вероятно патогенные</span><b>1 027</b></div>
+    <div class="srow"><i class="c-B"></i><span>доброкачественные и вероятно</span><b>3 469</b></div>
+    <div class="srow"><i class="c-VUS"></i><span>неопределённого значения</span><b>2 227</b></div>
+    <div class="srow"><i class="c-conflict"></i><span>противоречивые</span><b>2 869</b></div>
+    <h5>Вес вердикта</h5>
+    <div class="srow"><span class="stars">★☆☆</span><span>одна лаборатория, без критериев</span></div>
+    <div class="srow"><span class="stars">★★☆</span><span>несколько лабораторий сошлись</span></div>
+    <div class="srow"><span class="stars">★★★</span><span>экспертная комиссия ENIGMA</span></div>
+  </aside>
+</section>
 
 <section class="blk" id="barcode">
   <h2>Штрих-код гена</h2>

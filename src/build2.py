@@ -128,14 +128,15 @@ page = r'''<!doctype html>
 
   /* ladder */
   .ladder{padding:70px clamp(20px,6vw,90px);border-top:1px solid var(--line)}
-  .ladder table{border-collapse:collapse;width:100%;max-width:1100px;font:12px var(--sans)}
-  .ladder th{font:11px var(--mono);letter-spacing:.08em;text-transform:uppercase;color:var(--ink-2);text-align:left;padding:8px 10px;border-bottom:1px solid var(--ink);font-weight:400}
-  .ladder td{padding:9px 10px;border-bottom:1px solid var(--line);vertical-align:top}
-  .ladder td.g{font:600 12px var(--mono)} .ladder td.g small{display:block;font:11px var(--sans);font-weight:400;color:var(--ink-2)}
-  .ladder .cell{display:flex;align-items:center;gap:8px}
-  .ladder .sw{width:14px;height:14px;border-radius:2px;flex:none}
-  .ladder .cell span{color:var(--ink-2)} .ladder .cell b{font:11px var(--mono);font-weight:400;color:var(--ink);margin-left:auto}
-  .ladder .note{font:13.5px/1.5 var(--serif);color:var(--ink-2);max-width:640px;margin-top:14px}
+  .ladder table{border-collapse:collapse;width:100%;font:13px var(--sans);table-layout:fixed}
+  .ladder th{font:11px var(--mono);letter-spacing:.08em;text-transform:uppercase;color:var(--ink-2);text-align:left;padding:10px 14px 10px 0;border-bottom:1px solid var(--ink);font-weight:400}
+  .ladder td{padding:13px 14px 13px 0;border-bottom:1px solid var(--line);vertical-align:top}
+  .ladder td.g{font:600 12.5px var(--mono)} .ladder td.g small{display:block;font:11.5px var(--sans);font-weight:400;color:var(--ink-2);margin-top:2px}
+  .ladder tbody tr{transition:background .15s} .ladder tbody tr:hover{background:var(--paper-2)}
+  .ladder .cell{display:flex;align-items:center;gap:9px}
+  .ladder .sw{width:15px;height:15px;border-radius:2px;flex:none}
+  .ladder .cell span{color:var(--ink-2)} .ladder .cell b{font:11.5px var(--mono);font-weight:400;color:var(--ink);margin-left:auto;padding-right:14px}
+  .ladder .note{font:14.5px/1.55 var(--serif);color:var(--ink-2);max-width:760px;margin-top:18px}
 
   /* others */
   .others{padding:70px clamp(20px,6vw,90px);border-top:1px solid var(--line)}
@@ -163,7 +164,7 @@ page = r'''<!doctype html>
 <section class="hero">
   <div>
     <h1>Одна мутация,<br><em>сорок</em> тканей</h1>
-    <p>Точнее — 711 образцов тканей и клеток и около 4&#8201;500 предсказаний на одну букву. Как одна и та же опечатка в ДНК звучит в кишечнике, крови и мозге — и почему чаще всего её слышит только один орган.</p>
+    <p>Точнее — 711 образцов тканей и клеток и около 4&#8239;500 предсказаний на одну букву. Как одна и та же опечатка в ДНК звучит в кишечнике, крови и мозге — и почему чаще всего её слышит только один орган.</p>
     <div class="kicker">На кольце: <b>LCT · rs4988235</b> · «ген молока» · уровень РНК по 371 треку</div>
   </div>
   <div class="ring-wrap" id="heroRing"></div>

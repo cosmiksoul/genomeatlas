@@ -38,8 +38,18 @@ page = r'''<!doctype html>
   .ladder .row b{font:400 15px var(--serif);color:var(--ink)} .ladder .bar{height:22px;position:relative} .ladder .bar i{position:absolute;left:0;top:0;bottom:0;background:var(--ink)}
   .ladder .bar i.o{background:var(--ink);opacity:.35} .ladder .bar i.c{background:var(--ink);opacity:.6} .ladder .bar i.l{background:var(--down)} .ladder .bar i.e{background:var(--accent)}
   .ladder .v{font:12px var(--mono);color:var(--ink);text-align:right;font-variant-numeric:tabular-nums} .ladder .v small{display:block;color:var(--ink-3);font-size:10px}
-  .intro{padding:60px clamp(20px,6vw,90px) 50px;border-top:1px solid var(--line);display:grid;grid-template-columns:minmax(0,640px);gap:28px}
+  .intro{padding:60px clamp(20px,6vw,90px) 50px;border-top:1px solid var(--line);display:grid;grid-template-columns:minmax(0,640px) minmax(280px,380px);justify-content:space-between;gap:28px clamp(40px,6vw,120px)}
+  .intro-text{display:grid;gap:28px}
   .intro-block{display:grid;grid-template-columns:140px 1fr;gap:20px;align-items:start}
+  .scard{align-self:start;position:sticky;top:90px;border:1px solid var(--line);border-radius:3px;background:rgba(255,255,255,.35);padding:22px 24px 20px}
+  .scard h4{font:400 22px var(--serif);margin:0 0 4px}
+  .scard .sd{font:13px/1.5 var(--sans);color:var(--ink-2);margin:0 0 14px}
+  .scard .srow{display:grid;grid-template-columns:1fr auto;gap:2px 12px;border-bottom:1px dotted var(--line);padding:9px 0}
+  .scard .srow:last-child{border-bottom:0}
+  .scard .srow em{font:600 13px var(--mono);font-style:normal}
+  .scard .srow b{font:12px var(--mono);font-weight:400;color:var(--ink);font-variant-numeric:tabular-nums;text-align:right}
+  .scard .srow span{grid-column:1/3;font:12.5px/1.45 var(--sans);color:var(--ink-2)}
+  @media (max-width:1200px){.intro{grid-template-columns:minmax(0,640px)}.scard{position:static}}
   .intro-block h5{font:12px/1.6 var(--mono);letter-spacing:.12em;text-transform:uppercase;color:var(--accent);margin:4px 0 0}
   .intro-block p{font:17px/1.6 var(--serif);color:var(--ink);margin:0} .intro-block:first-child p{font-size:21px;line-height:1.45}
   section.blk{padding:70px clamp(20px,6vw,90px);border-top:1px solid var(--line)}
@@ -96,7 +106,17 @@ page = r'''<!doctype html>
   <div class="ladder" id="ladder"></div>
 </section>
 
-<section class="intro">%%INTRO%%</section>
+<section class="intro">
+  <div class="intro-text">%%INTRO%%</div>
+  <aside class="scard">
+    <h4>Четыре слоя финала</h4>
+    <p class="sd">Все графики этой истории — наложение четырёх независимых источников на один ген BRCA1.</p>
+    <div class="srow"><em>AlphaGenome Atlas</em><b>%%L_POSSIBLE%%</b><span>предсказания для каждой возможной замены гена</span></div>
+    <div class="srow"><em>gnomAD v4.1</em><b>%%L_OBSERVED%%</b><span>замен видели хотя бы у одного из 807 тысяч человек</span></div>
+    <div class="srow"><em>ClinVar</em><b>%%L_CLINVAR%%</b><span>замен с клиническим вердиктом</span></div>
+    <div class="srow"><em>Findlay et al. 2018</em><b>%%L_SGE%%</b><span>замен измерено экспериментом в клетках</span></div>
+  </aside>
+</section>
 
 <section class="blk" id="waffle">
   <h2>Тысяча квадратов</h2>
@@ -210,6 +230,7 @@ exl = lambda L: ''.join(f'<div><span>{html.escape(h)} · {k}</span><b>эксп. 
 page = (page.replace('%%INTRO%%', ''.join(f'<div class="intro-block"><h5>{h}</h5><p>{t}</p></div>' for h, t in intro))
   .replace('%%S_WAFFLE%%', sec['waffle']).replace('%%S_TOP%%', sec['top']).replace('%%S_GENES%%', sec['genes']).replace('%%S_COVERAGE%%', sec['coverage']).replace('%%S_LAB%%', sec['lab']).replace('%%S_CIRCULAR%%', sec['circular']).replace('%%S_CLOSE%%', sec['close'])
   .replace('%%TOP1%%', fmt(F['top1'])).replace('%%COV%%', cov)
+  .replace('%%L_POSSIBLE%%', fmt(F['possible'])).replace('%%L_OBSERVED%%', fmt(F['observed'])).replace('%%L_CLINVAR%%', fmt(F['clinvar'])).replace('%%L_SGE%%', fmt(F['sge']))
   .replace('%%AUC%%', f"{SG['auc']:.3f}".replace('.', ',')).replace('%%AUCM%%', f"{SG['auc_missense']:.3f}".replace('.', ',')).replace('%%NSGE%%', fmt(SG['n'])).replace('%%NMIS%%', fmt(SG['n_missense']))
   .replace('%%EX1%%', exl(D['ex_nf_low'])).replace('%%EX2%%', exl(D['ex_f_high']))
   .replace('%%SOURCES%%', ''.join(f'<li><a href="{u}" target="_blank" rel="noopener">{html.escape(t)}</a></li>' for t, u in SOURCES4))

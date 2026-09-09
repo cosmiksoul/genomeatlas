@@ -62,12 +62,12 @@ function buildTissues(g,host){
   el('text',{x:x0,y:rows.length*rh+2,class:'axlab'},svg).textContent='↓ меньше';el('text',{x:x1,y:rows.length*rh+2,class:'axlab','text-anchor':'end'},svg).textContent='больше ↑';
 }
 function buildAttr(g,host){
-  const D=SITE.genes[g.id],gr=Object.fromEntries(Object.entries(D.famous.groups).map(([k,v])=>[k,Math.min(1,v)]));const keys=FEAT_ORDER.filter(k=>gr[k]>0.005).sort((a,b)=>gr[b]-gr[a]).slice(0,6);
+  const D=SITE.genes[g.id],gr=Object.fromEntries(Object.entries(D.famous.groups).map(([k,v])=>[k,Math.min(1,v)]));const keys=[...FEAT_ORDER].sort((a,b)=>(gr[b]||0)-(gr[a]||0)).slice(0,6);
   const rh=30,w=570,units=20,svg=el('svg',{viewBox:`0 0 ${w} ${keys.length*rh}`,class:'attr'},host);
-  keys.forEach((k,i)=>{const y=i*rh+rh/2,n=Math.round(gr[k]*units);
-    el('text',{x:0,y:y+4,class:'lab'},svg).textContent=k;
+  keys.forEach((k,i)=>{const v=gr[k]||0,y=i*rh+rh/2,n=Math.round(v*units);
+    el('text',{x:0,y:y+4,class:'lab',style:v<0.005?'fill:var(--ink-3)':''},svg).textContent=k;
     for(let u=0;u<units;u++)el('rect',{x:190+u*15,y:y-5,width:10,height:10,rx:1,class:'u'+(u<n?'':' off'),'fill-opacity':u<n?(i===0?1:.55):1},svg);
-    el('text',{x:w-10,y:y+4,class:'pct','text-anchor':'end'},svg).textContent=Math.round(gr[k]*100)+' %'});
+    el('text',{x:w-10,y:y+4,class:'pct','text-anchor':'end'},svg).textContent=v<0.005?'—':Math.round(v*100)+' %'});
 }
 '''
 s = re.sub(r'function matrixData\(g\)\{.*?(?=\n/\* ---------- )', new_builders.strip('\n'), s, count=1, flags=re.S)
@@ -87,9 +87,9 @@ new_panels = '''    <div class="panels">
       <div class="panel"><div class="panel-h"><h3>Где организм это почувствует</h3><span class="sub">предсказанный сдвиг экспрессии ${SITE.genes[g.id].targets[0]} по тканям и клеткам, топ-14 по модулю</span></div><div class="ts"></div>
         <p class="panel-note">Шкала — предсказанное изменение уровня РНК гена в логарифмической шкале; значения около нуля означают «ген читается как обычно». Ткани и клеточные линии — из наборов ENCODE и GTEx.</p></div>
       <div class="panel"><div class="panel-h"><h3>Что именно ломается</h3><span class="sub">из чего сложена оценка AVI знаменитого варианта · AVI ${SITE.genes[g.id].famous.avi.toFixed(2)}, квантиль ${SITE.genes[g.id].famous.q.toFixed(3)}</span></div><div class="at"></div></div>
+      <div class="panel model"><div class="panel-h"><h3>Что видит модель</h3><span class="sub">итог главы по данным Атласа</span></div><p class="model-text">${MODEL[g.id]}</p></div>
 '''
 s = s.replace(old_panels, new_panels)
-s = s.replace('join("")}<details class="srcs"><summary>Источники главы', 'join("")}<div class="model"><div class="eyebrow"><span class="n">Что видит модель</span></div><p class="body">${MODEL[g.id]}</p></div><details class="srcs"><summary>Источники главы', 1)
 assert 'Что видит модель' in s
 s = s.replace("const TISSUES=", "const MODEL=" + json.dumps(MODEL, ensure_ascii=False) + ";\nconst TISSUES=", 1)
 s = s.replace("  const circles=buildMatrix(g,s.querySelector('.mx'));buildTissues(g,s.querySelector('.ts'));buildAttr(g,s.querySelector('.at'));",
@@ -117,23 +117,23 @@ s = s.replace(old_fin, new_fin)
 old_fin_js = s[s.index('/* finale */'):s.index('</script>\n</body>')]
 new_fin_js = r'''/* finale: shout-or-whisper */
 (function(){
-  const host=document.getElementById('shout');const W=1000,H=330,x0=60,x1=W-40;const lo=-0.5,hi=2.3;const X=v=>x0+(v-lo)/(hi-lo)*(x1-x0);
+  const host=document.getElementById('shout');const W=1000,H=308,x0=60,x1=W-40;const lo=-0.5,hi=2.3;const X=v=>x0+(v-lo)/(hi-lo)*(x1-x0);
   const svg=el('svg',{viewBox:`0 0 ${W} ${H}`,class:'shout'},host);
   const items=GENES.map(g=>({g,avi:SITE.genes[g.id].famous.avi,q:SITE.genes[g.id].famous.q,prot:(SITE.genes[g.id].famous.groups['Белок (аминокислота)']+SITE.genes[g.id].famous.groups['Белок (обрыв/старт/стоп)'])>0.4})).sort((a,b)=>a.avi-b.avi);
-  const yA=200;
+  const yA=232;
   /* bands under axis */
-  [[0.2,0.7,'регуляция и консервативность','var(--accent)'],[0.9,2.3,'поломка белка','var(--ink)']].forEach(([a,b,t,c])=>{el('rect',{x:X(a),y:yA-90,width:X(b)-X(a),height:100,fill:c,opacity:c==='var(--ink)'?.045:.08},svg);el('text',{x:X(a)+8,y:yA+22,class:'regionlab'},svg).textContent=t});
+  [[0.2,0.7,'регуляция и консервативность','var(--accent)'],[0.9,2.3,'поломка белка','var(--ink)']].forEach(([a,b,t,c])=>{el('rect',{x:X(a),y:yA-192,width:X(b)-X(a),height:202,fill:c,opacity:c==='var(--ink)'?.045:.08},svg);el('text',{x:X(a)+8,y:yA+22,class:'regionlab'},svg).textContent=t});
   el('line',{x1:x0,x2:x1,y1:yA,y2:yA,stroke:'var(--ink)','stroke-width':1,opacity:.6},svg);
   [-0.5,0,0.5,1,1.5,2].forEach(v=>{el('line',{x1:X(v),x2:X(v),y1:yA-4,y2:yA+4,stroke:'var(--ink)',opacity:.6},svg);el('text',{x:X(v),y:yA+40,class:'axlab','text-anchor':'middle'},svg).textContent=v});
   el('text',{x:x0,y:yA+58,class:'axlab'},svg).textContent='← безобиднее';el('text',{x:x1,y:yA+58,class:'axlab','text-anchor':'end'},svg).textContent='разрушительнее → AVI';
-  const rowsEnd=[];const LW=118;
-  items.forEach((it,i)=>{const x=X(it.avi);let row=0;while(rowsEnd[row]!==undefined&&x-rowsEnd[row]<LW)row++;rowsEnd[row]=x;const ly=yA-22-row*24;
-    el('line',{x1:x,x2:x,y1:yA-8,y2:ly+5,stroke:'var(--accent)',opacity:.7},svg);
+  const rowsEnd=[];const LW=168;
+  items.forEach((it,i)=>{const x=X(it.avi);let row=0;while(rowsEnd[row]!==undefined&&x-rowsEnd[row]<LW)row++;rowsEnd[row]=x;const ly=yA-26-row*32;
+    el('line',{x1:x,x2:x,y1:yA-8,y2:ly+6,stroke:'var(--accent)',opacity:.55},svg);
     el('circle',{cx:x,cy:yA,r:7,fill:it.prot?'var(--ink)':'var(--accent)',stroke:'var(--paper)','stroke-width':2},svg);
     const anchor=x<x0+60?'start':x>x1-60?'end':'middle';
     const t=el('text',{x:x,y:ly,class:'glab','text-anchor':anchor},svg);t.innerHTML=`${it.g.id} <tspan class="t">${it.g.trait.toLowerCase()}</tspan>`;
-    el('text',{x:x,y:ly+13,'text-anchor':anchor,style:'font:10px var(--mono);fill:var(--ink-3)'},svg).textContent=`AVI ${it.avi.toFixed(2)} · q ${it.q.toFixed(3)}`});
-  el('text',{x:x0,y:H-8,class:'axlab'},svg).textContent='● чёрный — в оценке доминирует белок (AlphaMissense / обрыв)   ● золотой — регуляция и консервативность   ·   q — квантиль среди всех 9 млрд замен';
+    el('text',{x:x,y:ly+14,'text-anchor':anchor,style:'font:10px var(--mono);fill:var(--ink-3)'},svg).textContent=`AVI ${it.avi.toFixed(2)} · q ${it.q.toFixed(3)}`});
+  el('text',{x:x0,y:H-6,class:'axlab'},svg).textContent='● чёрный — в оценке доминирует белок (AlphaMissense / обрыв)   ● золотой — регуляция и консервативность   ·   q — квантиль среди всех 9 млрд замен';
 })();
 const cmp=document.getElementById('compare');
 [...GENES].sort((a,b)=>SITE.genes[b.id].share99-SITE.genes[a.id].share99).forEach(g=>{const D=SITE.genes[g.id];const d=document.createElement('div');d.className='card';d.innerHTML=`<h4>${g.id}</h4><div class="t">${g.title}</div><div class="big">${(D.share99*100).toFixed(1)}<span style="font-size:20px"> %</span><small>из ${D.n.toLocaleString('ru-RU')} замен — в топ-1 % генома</small></div>`;
@@ -149,8 +149,8 @@ s = s.replace('  /* NAV */', '''  .strip-wrap{position:relative;margin:6px 0 4px
   .structs{margin-top:2px}
   .panel-note{font:13.5px/1.5 var(--serif);color:var(--ink-2);margin:10px 0 0;max-width:640px}
   .shout .glab{font-size:12px}
-  .model{border-left:2px solid var(--accent);padding-left:16px;margin:8px 0 6px}
-  .model .eyebrow{margin-bottom:6px}
+  .panel.model{border-top:2px solid var(--accent)}
+  .model-text{font:15.5px/1.62 var(--serif);color:var(--ink);margin:8px 0 0;max-width:680px}
   /* NAV */''', 1)
 s = s.replace('<title>Гены, о которых вы слышали — макет</title>', '<title>Гены, о которых вы слышали</title>')
 s = s.replace('<div class="mock-tag">макет · данные иллюстративные</div>', '<div class="mock-tag">данные: AlphaGenome Atlas · черновик</div>')

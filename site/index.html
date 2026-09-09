@@ -11,11 +11,18 @@
     --serif:"Iowan Old Style","Palatino Linotype","Book Antiqua",Georgia,serif;--sans:"Helvetica Neue",Helvetica,Arial,system-ui,sans-serif;--mono:"SF Mono",Menlo,Consolas,monospace}
   *{box-sizing:border-box} body{margin:0;background:var(--paper);color:var(--ink);font-family:var(--sans);font-size:15px;line-height:1.55;-webkit-font-smoothing:antialiased}
   .hero{padding:80px clamp(20px,6vw,90px) 40px;display:grid;grid-template-columns:minmax(300px,640px) minmax(0,1fr);gap:40px clamp(30px,5vw,90px);align-items:end}
+  .fieldcap{font:11px var(--mono);letter-spacing:.08em;text-transform:uppercase;color:var(--ink-3);margin-top:12px;display:flex;gap:18px;flex-wrap:wrap}
+  .fieldcap i{display:inline-block;width:8px;height:8px;border-radius:50%;vertical-align:-1px;margin-right:6px}
   .hero h1{font:400 clamp(48px,7.5vw,104px)/1 var(--serif);letter-spacing:-.02em;margin:0 0 26px} .hero h1 em{font-style:italic;color:var(--accent)}
   .hero .kick{font:12px var(--mono);letter-spacing:.12em;text-transform:uppercase;color:var(--accent);margin:0 0 20px}
   .hero p{font:21px/1.5 var(--serif);color:var(--ink);margin:0} .hero .sub{font:12px var(--mono);letter-spacing:.1em;text-transform:uppercase;color:var(--ink-3);margin-top:22px}
   .hero canvas{width:100%;height:auto;display:block}
-  .essay{padding:50px clamp(20px,6vw,90px) 40px;border-top:1px solid var(--line);display:grid;grid-template-columns:minmax(0,660px);gap:26px}
+  .essay{padding:50px clamp(20px,6vw,90px) 60px;border-top:1px solid var(--line);display:grid;grid-template-columns:minmax(0,660px) minmax(280px,380px);justify-content:space-between;gap:26px clamp(40px,6vw,120px)}
+  .essay .blk{grid-column:1}
+  .rail{grid-column:2;grid-row:1/span 3;align-self:start;position:sticky;top:90px;border-top:1px solid var(--ink);padding-top:20px;display:grid;gap:20px}
+  .rail h4{font:12px var(--mono);letter-spacing:.12em;text-transform:uppercase;color:var(--accent);margin:0}
+  .rail .ri b{display:block;font:400 clamp(28px,2.6vw,38px)/1 var(--serif);letter-spacing:-.02em;font-variant-numeric:tabular-nums;white-space:nowrap}
+  .rail .ri span{display:block;font:12.5px/1.45 var(--sans);color:var(--ink-2);margin-top:5px;max-width:300px}
   .blk{display:grid;grid-template-columns:150px 1fr;gap:20px;align-items:start}
   .blk>*{grid-column:2} .blk h5{grid-column:1;grid-row:1}
   .blk h5{font:12px/1.6 var(--mono);letter-spacing:.12em;text-transform:uppercase;color:var(--accent);margin:4px 0 0}
@@ -33,10 +40,12 @@
   .card p b{font-weight:400;font-style:italic;color:var(--accent)}
   .card svg{width:100%;height:auto;display:block;margin:14px 0 0}
   .card .go{font:12px var(--mono);letter-spacing:.1em;text-transform:uppercase;color:var(--ink);margin-top:14px;display:inline-block;border-bottom:1px solid var(--accent)}
-  .how{padding:50px clamp(20px,6vw,90px) 90px;border-top:1px solid var(--line);display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:40px;font-size:14.5px;color:var(--ink-2);max-width:1300px}
+  .how{padding:50px clamp(20px,6vw,90px) 90px;border-top:1px solid var(--line);display:grid;grid-template-columns:repeat(4,1fr);gap:40px clamp(24px,3vw,56px);font-size:14.5px;color:var(--ink-2)}
   .how h5{font:12px var(--mono);letter-spacing:.12em;text-transform:uppercase;color:var(--ink);margin:0 0 10px} .how p{margin:0 0 10px;font-family:var(--serif);font-size:15px;line-height:1.55}
   .sw{display:inline-block;width:11px;height:11px;border-radius:2px;vertical-align:-1px;margin-right:6px}
-  @media (max-width:900px){.hero,.card{grid-template-columns:1fr}.blk{grid-template-columns:1fr;gap:6px}}
+  @media (max-width:1200px){.essay{grid-template-columns:minmax(0,660px)}.essay .blk,.rail{grid-column:1}.rail{grid-row:auto;position:static}.how{grid-template-columns:repeat(2,1fr)}}
+  @media (max-width:900px){.hero,.card{grid-template-columns:1fr}.blk{grid-template-columns:1fr;gap:6px}.blk>*{grid-column:1}.blk h5{grid-row:auto}}
+  @media (max-width:640px){.how{grid-template-columns:1fr}}
 </style><link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 16 16%22><rect width=%2216%22 height=%2216%22 fill=%22%23f5f2ec%22/><circle cx=%228%22 cy=%228%22 r=%224.5%22 fill=%22%23c4901e%22/></svg>">
 
 <style>
@@ -50,8 +59,8 @@
   .pnav .sp{flex:1}
   .pnav .meta{padding:16px clamp(20px,6vw,90px) 16px 22px;color:var(--ink-3,#9a968a);white-space:nowrap}
   @media (max-width:1620px){.pnav .meta{display:none}}
-  @media (max-width:1220px){.pnav a.item{padding:16px 14px}}
-  @media (max-width:1080px) and (min-width:901px){.pnav a.item .t{display:none}}
+  @media (max-width:1460px){.pnav a.item{padding:16px 14px}.pnav .brand{padding:16px 24px}}
+  @media (max-width:1250px) and (min-width:901px){.pnav a.item .t{display:none}}
   @media (max-width:900px){.pnav{flex-wrap:wrap}.pnav a.item{padding:12px 14px}.pnav .brand{padding:12px 20px;border-right:0;width:100%;border-bottom:1px solid var(--line,#d8d3c7)}}
   .pnext{border-top:1px solid var(--ink,#17160f);background:var(--paper,#f5f2ec)}
   .pnext a{display:flex;flex-wrap:wrap;justify-content:space-between;align-items:baseline;gap:10px 30px;padding:30px clamp(20px,6vw,90px) 60px;text-decoration:none}
@@ -69,7 +78,10 @@
     <p>Четыре истории о том, как нейросеть прочитала девять миллиардов возможных ошибок в ДНК человека, что из этого может понять тот, кто не биолог, — и какую часть этого вообще можно проверить.</p>
     <div class="sub">Данные: AlphaGenome Atlas, Google DeepMind · ClinVar · Ensembl · 2026</div>
   </div>
-  <canvas id="field" width="1200" height="520"></canvas>
+  <div>
+    <canvas id="field" width="1200" height="520"></canvas>
+    <div class="fieldcap"><span><i style="background:var(--ink);opacity:.5"></i>каждая точка — около двух миллионов возможных замен</span><span><i style="background:var(--accent)"></i>золото — вершина распределения AVI</span></div>
+  </div>
 </section>
 
 <section class="essay">
@@ -81,6 +93,15 @@
     <div class="genes"><span><b>LCT</b>молоко</span><span><b>CYP1A2</b>кофе</span><span><b>ALDH2</b>алкоголь</span><span><b>ACTN3</b>спринт</span><span><b>HERC2</b>голубые глаза</span><span><b>TAS2R38</b>брокколи</span><span><b>MC1R</b>рыжие</span><span><b>ABCC11</b>дезодорант</span><span><b>OR6A2</b>кинза</span><span><b>FUT2</b>норовирус</span></div></div>
   <div class="blk"><h5>Куда это привело</h5>
     <p>Первая история оставила два вопроса. Если модель говорит, что опечатка важна, — важна для чего именно, для какого органа? Так появилась вторая история, про ткани. И если модель так уверенно отличает громкие поломки от тихих — согласится ли с ней врач там, где от вердикта зависит жизнь? Так появилась третья, про ген BRCA1 и одиннадцать тысяч клинических приговоров. А когда модель прошла и эту проверку, остался последний, самый неудобный вопрос: а что вообще можно проверить, если большинство из девяти миллиардов замен никто никогда не видел? Четвёртая история — отрезвляющий финал. Четыре истории — это одна дорога: от застольной легенды к органу, от органа к клинике, от клиники к границам знания.</p></div>
+  <aside class="rail">
+    <h4>Проект в цифрах</h4>
+    <div class="ri"><b>9 000 000 000</b><span>возможных однобуквенных замен в геноме человека — все просчитаны моделью</span></div>
+    <div class="ri"><b>≈ 1 петабайт</b><span>предсказаний выложено DeepMind в открытый доступ</span></div>
+    <div class="ri"><b>690 000</b><span>замен разобрано в четырёх историях этого проекта</span></div>
+    <div class="ri"><b>711</b><span>образцов тканей и клеток «слышат» каждую замену</span></div>
+    <div class="ri"><b>11 650</b><span>клинических вердиктов ClinVar наложено на ген BRCA1</span></div>
+    <div class="ri"><b>3 893</b><span>замены проверены экспериментом в клетках — единственный такой ген</span></div>
+  </aside>
 </section>
 
 <section class="stories">
@@ -102,9 +123,10 @@
   <div><h5>Данные и лицензии</h5><p>AlphaGenome Atlas (Google DeepMind) — некоммерческое использование; ClinVar (NIH), gnomAD v4.1 (Broad), Ensembl (EMBL-EBI) — открытые данные; эксперимент Findlay et al. 2018 — MaveDB, CC BY-NC-SA. Код и данные проекта: <a href="https://github.com/cosmiksoul/genomeatlas" style="color:inherit">github.com/cosmiksoul/genomeatlas</a>. Сайт без рекламы и не связан с работодателем автора.</p></div>
 </section>
 <script>
-(function(){const c=document.getElementById('field'),ctx=c.getContext('2d');const W=c.width,H=c.height;let t0=performance.now();
-  const r=(s=>()=>{s=(s*9301+49297)%233280;return s/233280})(11);const dots=[];const gap=13;
-  for(let y=gap;y<H;y+=gap)for(let x=gap;x<W;x+=gap){const v=r();dots.push({x,y,a:v<.85?.05+v*.06:v<.97?.2:.55,ph:r()*6.28,acc:v>.995})}
-  function draw(t){ctx.clearRect(0,0,W,H);for(const d of dots){const p=.6+.4*Math.sin(t/900+d.ph);ctx.beginPath();ctx.arc(d.x,d.y,d.acc?2.6:1.7,0,6.28);ctx.fillStyle=d.acc?`rgba(196,144,30,${.5+.4*p})`:`rgba(23,22,15,${d.a*p})`;ctx.fill()}requestAnimationFrame(draw)}requestAnimationFrame(draw)})();
+(function(){const c=document.getElementById('field'),ctx=c.getContext('2d');const W=c.width,H=c.height;
+  const r=(s=>()=>{s=(s*9301+49297)%233280;return s/233280})(11);const dots=[];const gap=10.5;
+  for(let y=gap;y<H;y+=gap)for(let x=gap;x<W;x+=gap){const v=r();dots.push({x:x+(r()-.5)*3,y:y+(r()-.5)*3,a:v<.8?.09+v*.12:v<.96?.32:.62,r:v<.96?1.8:2.2,ph:r()*6.28,acc:v>.992})}
+  function draw(t){ctx.clearRect(0,0,W,H);for(const d of dots){const p=.7+.3*Math.sin(t/1100+d.ph);ctx.beginPath();ctx.arc(d.x,d.y,d.acc?2.8:d.r,0,6.28);ctx.fillStyle=d.acc?`rgba(196,144,30,${.55+.35*p})`:`rgba(23,22,15,${d.a*p})`;ctx.fill()}requestAnimationFrame(draw)}
+  const mq=matchMedia('(prefers-reduced-motion: reduce)');mq.matches?draw(0):requestAnimationFrame(draw)})();
 </script>
 </body></html>
