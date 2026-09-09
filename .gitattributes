@@ -1,0 +1,4 @@
+* text=auto
+*.parquet binary
+*.zip binary
+*.png binary

@@ -1,0 +1,11 @@
+src/.env
+src/data/brca1/
+src/data/brca1_clinvar_esummary.json
+src/data/brca1_ensembl_variation.json
+src/*.png
+__pycache__/
+src/*.html
+!src/template_genes.html
+*.zip
+site_backup/
+drafts/

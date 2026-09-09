@@ -1,0 +1,501 @@
+<!doctype html>
+<html lang="ru">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Гены, о которых вы слышали — макет</title>
+<style>
+  :root{
+    --paper:#f5f2ec; --paper-2:#ece8df; --ink:#17160f; --ink-2:#5a574d; --ink-3:#9a968a; --line:#d8d3c7;
+    --accent:#c4901e; --accent-soft:#e9d8a8;
+    --serif:"Iowan Old Style","Palatino Linotype","Book Antiqua",Georgia,serif;
+    --sans:"Helvetica Neue",Helvetica,Arial,system-ui,sans-serif;
+    --mono:"SF Mono",Menlo,Consolas,monospace;
+  }
+  *{box-sizing:border-box}
+  html{scroll-behavior:smooth}
+  body{margin:0;background:var(--paper);color:var(--ink);font-family:var(--sans);font-size:15px;line-height:1.55;-webkit-font-smoothing:antialiased}
+  a{color:inherit}
+  .mock-tag{position:fixed;right:14px;bottom:14px;z-index:50;font:11px/1 var(--mono);letter-spacing:.08em;text-transform:uppercase;background:var(--ink);color:var(--paper);padding:8px 10px;border-radius:2px;opacity:.85}
+
+  /* HERO */
+  .hero{min-height:92vh;display:grid;grid-template-rows:auto 1fr auto;padding:28px clamp(20px,6vw,90px) 40px;position:relative;overflow:hidden}
+  .masthead{display:flex;justify-content:space-between;align-items:baseline;font:12px/1 var(--mono);letter-spacing:.1em;text-transform:uppercase;color:var(--ink-2)}
+  .hero-body{align-self:center;display:grid;grid-template-columns:minmax(300px,500px) minmax(0,1fr);gap:40px clamp(30px,5vw,90px);align-items:center}
+  .karyo{position:relative}
+  .karyo-hint{font:11px var(--mono);color:var(--ink-3);letter-spacing:.06em;text-transform:uppercase;margin-bottom:10px}
+  .karyo svg{width:100%;height:auto;max-height:78vh}
+  .chr{stroke:var(--ink);stroke-width:1.2;stroke-linecap:round;opacity:.28;transition:opacity .2s}
+  .chr.has{opacity:.75;stroke-width:1.6}
+  .cen{fill:var(--paper);stroke:var(--ink);stroke-width:1;opacity:.6}
+  .chrlab{font:10px var(--mono);fill:var(--ink-3);text-anchor:middle;letter-spacing:.04em}
+  .chrlab.has{fill:var(--ink)}
+  .gdot{fill:var(--accent);cursor:pointer;transition:r .15s}
+  .gring{fill:none;stroke:var(--accent);stroke-width:1;opacity:.7;transform-origin:center;transform-box:fill-box;animation:ring 2.6s ease-out infinite}
+  @keyframes ring{0%{transform:scale(.4);opacity:.8}100%{transform:scale(2.6);opacity:0}}
+  .glab{font:11px var(--mono);fill:var(--ink);letter-spacing:.03em;pointer-events:none;transition:opacity .15s}
+  .glab tspan.t{fill:var(--ink-2);font-family:var(--sans);font-size:11px}
+  .gtick{stroke:var(--accent);stroke-width:1;opacity:.5;transition:opacity .15s}
+  .gene.on .gtick{opacity:1;stroke-width:1.4}
+  .gene.on .glab{font-weight:600}
+  @media (max-width:900px){.hero-body{grid-template-columns:1fr}.karyo svg{max-height:none}}
+  .hero h1{font:400 clamp(44px,7vw,96px)/1 var(--serif);letter-spacing:-.02em;margin:0 0 22px}
+  .hero h1 em{font-style:italic;color:var(--accent)}
+  .hero p{font:19px/1.5 var(--serif);color:var(--ink-2);max-width:620px;margin:0}
+  .counter{font:12px/1 var(--mono);color:var(--ink-2);letter-spacing:.06em;margin-top:26px}
+  .counter b{font-weight:400;color:var(--ink);font-variant-numeric:tabular-nums}
+  #genomeField{position:absolute;inset:0;width:100%;height:100%;z-index:0;opacity:.55;pointer-events:none}
+  .hero>*:not(canvas){position:relative;z-index:1}
+  .scroll-hint{font:12px var(--mono);color:var(--ink-3);letter-spacing:.1em;text-transform:uppercase}
+
+  /* INTRO */
+  .intro{padding:80px clamp(20px,6vw,90px) 70px;border-top:1px solid var(--line);display:grid;grid-template-columns:minmax(0,680px);gap:30px}
+  .intro-block{display:grid;grid-template-columns:150px 1fr;gap:20px;align-items:start}
+  @media (max-width:700px){.intro-block{grid-template-columns:1fr;gap:6px}}
+  .intro-block h5{font:12px/1.6 var(--mono);letter-spacing:.12em;text-transform:uppercase;color:var(--accent);margin:4px 0 0}
+  .intro-block p{font:17px/1.6 var(--serif);color:var(--ink);margin:0}
+  .intro-block:first-child p{font-size:21px;line-height:1.45}
+  .chapter .body{font:15.5px/1.65 var(--serif);color:var(--ink);margin:0 0 14px}
+  .chapter .body:last-of-type{margin-bottom:26px}
+
+
+  /* INTRO v2 */
+  .intro{padding:80px clamp(20px,6vw,90px) 70px;border-top:1px solid var(--line);display:grid;grid-template-columns:minmax(0,600px) minmax(0,1fr);gap:40px clamp(40px,6vw,110px);align-items:start}
+  .intro-text{display:grid;gap:28px}
+  .intro-block{display:grid;grid-template-columns:140px 1fr;gap:20px;align-items:start}
+  .intro-block h5{font:12px/1.6 var(--mono);letter-spacing:.12em;text-transform:uppercase;color:var(--accent);margin:4px 0 0}
+  .intro-block p{font:17px/1.6 var(--serif);color:var(--ink);margin:0}
+  .intro-block:first-child p{font-size:21px;line-height:1.45}
+  .intro-lab{position:sticky;top:20px;border:1px solid var(--line);background:rgba(255,255,255,.35);padding:22px 24px 18px;border-radius:3px}
+  .lab-eyebrow{font:11px var(--mono);letter-spacing:.12em;text-transform:uppercase;color:var(--accent)}
+  .lab-h h4{font:400 24px var(--serif);margin:4px 0 8px}
+  .lab-h p{font:13.5px/1.5 var(--sans);color:var(--ink-2);margin:0 0 16px}
+  .lab-foot{font:11.5px/1.5 var(--mono);color:var(--ink-3);margin-top:14px;border-top:1px dashed var(--line);padding-top:10px}
+  .srcs{font:13px var(--sans);color:var(--ink-2);margin-top:6px}
+  .srcs summary{cursor:pointer;font:11px var(--mono);letter-spacing:.1em;text-transform:uppercase;color:var(--ink-3)}
+  .srcs summary:hover{color:var(--ink)}
+  .srcs ol{margin:8px 0 0;padding-left:18px;display:grid;gap:4px}
+  .srcs a{color:var(--ink-2);text-decoration:none;border-bottom:1px solid var(--line)}
+  .srcs a:hover{color:var(--ink);border-color:var(--ink)}
+  .chapter .srcs{margin-top:18px;margin-bottom:24px}
+  @media (max-width:1000px){.intro{grid-template-columns:1fr}.intro-lab{position:static}}
+  @media (max-width:700px){.intro-block{grid-template-columns:1fr;gap:6px}}
+
+  /* glossary terms */
+  .term{border-bottom:1px dotted var(--accent);cursor:help;text-decoration:none}
+  .term:hover,.term:focus{background:var(--accent-soft);outline:none}
+  .tip.def{white-space:normal;max-width:300px;font-family:var(--sans);font-size:13px;line-height:1.45;transform:translate(-50%,-115%);text-align:left}
+  .tip.def b{display:block;font-family:var(--mono);font-size:11px;letter-spacing:.08em;text-transform:uppercase;margin-bottom:4px}
+
+  /* mutator */
+  .mut-strip{display:flex;flex-wrap:wrap;gap:3px 0;margin:6px 0 4px;user-select:none}
+  .mut-b{width:22px;height:30px;display:flex;align-items:center;justify-content:center;font:600 13px var(--mono);cursor:pointer;border-bottom:3px solid transparent;border-radius:2px;transition:background .12s;position:relative}
+  .mut-b:hover{background:var(--paper-2)}
+  .mut-b.changed{background:var(--accent);color:var(--paper)}
+  .mut-b.changed::after{content:attr(data-ref);position:absolute;top:-11px;font:9px var(--mono);color:var(--accent);text-decoration:line-through}
+  .mut-b.r-enh{border-color:#8a7a4a}.mut-b.r-prom{border-color:#3d3a30}.mut-b.r-exon{border-color:var(--ink)}.mut-b.r-splice{border-color:var(--accent)}.mut-b.r-intron{border-color:var(--line)}
+  .mut-legend{display:flex;flex-wrap:wrap;gap:6px 14px;font:10.5px var(--mono);color:var(--ink-2);letter-spacing:.03em;margin:0 0 14px}
+  .mut-legend i{display:inline-block;width:14px;height:3px;vertical-align:middle;margin-right:5px}
+  .mut-out{display:grid;grid-template-columns:1fr 1fr;gap:16px 24px;align-items:start}
+  .mut-bars .row{display:grid;grid-template-columns:110px 1fr 44px;gap:10px;align-items:center;font:12px var(--sans);color:var(--ink-2);margin-bottom:8px}
+  .mut-bars .bar{height:10px;background:var(--line);border-radius:2px;overflow:hidden}
+  .mut-bars .bar i{display:block;height:100%;background:var(--ink);transition:width .35s cubic-bezier(.2,.8,.2,1)}
+  .mut-bars .v{font:11px var(--mono);color:var(--ink-3);text-align:right}
+  .mut-prot{font:13px var(--mono);letter-spacing:.02em;line-height:1.9;color:var(--ink)}
+  .mut-prot span{display:inline-block;padding:0 5px;border:1px solid var(--line);border-radius:2px;margin:0 2px 2px 0}
+  .mut-prot span.diff{border-color:var(--accent);background:var(--accent-soft)}
+  .mut-prot span.stop{border-color:var(--ink);background:var(--ink);color:var(--paper)}
+  .mut-prot span.lost{opacity:.25;text-decoration:line-through}
+  .mut-mech{font:14px/1.45 var(--serif);color:var(--ink);margin:0 0 8px;min-height:44px}
+  .mut-mech b{color:var(--accent);font-weight:400;font-style:italic}
+  .mut-avi{font:11px var(--mono);color:var(--ink-3);letter-spacing:.06em;text-transform:uppercase}
+  .mut-avi b{font:400 22px var(--serif);color:var(--ink);letter-spacing:0;text-transform:none;margin-right:6px}
+  .mut-reset{font:11px var(--mono);letter-spacing:.08em;text-transform:uppercase;background:none;border:1px solid var(--line);color:var(--ink-2);padding:6px 10px;border-radius:2px;cursor:pointer;margin-top:10px}
+  .mut-reset:hover{border-color:var(--ink);color:var(--ink)}
+  @media (max-width:600px){.mut-out{grid-template-columns:1fr}}
+
+  /* NAV */
+  .genenav{position:sticky;top:0;z-index:20;background:rgba(245,242,236,.92);backdrop-filter:blur(6px);border-top:1px solid var(--line);border-bottom:1px solid var(--line);display:flex;gap:0;overflow-x:auto}
+  .genenav a{flex:1;min-width:104px;text-decoration:none;padding:10px 12px;border-right:1px solid var(--line);display:flex;flex-direction:column;gap:2px;transition:background .2s}
+  .genenav a:last-child{border-right:0}
+  .genenav a:hover,.genenav a.active{background:var(--paper-2)}
+  .genenav .g{font:600 13px var(--mono);letter-spacing:.04em}
+  .genenav .t{font:12px var(--sans);color:var(--ink-2)}
+
+  /* CHAPTER */
+  .chapter{padding:80px clamp(20px,6vw,90px);border-bottom:1px solid var(--line);display:grid;grid-template-columns:minmax(0,1fr) minmax(0,2.1fr);gap:48px}
+  .chapter .story{align-self:start}
+  .eyebrow{font:12px var(--mono);letter-spacing:.12em;text-transform:uppercase;color:var(--ink-2);margin-bottom:14px}
+  .eyebrow .n{color:var(--accent)}
+  .chapter h2{font:400 clamp(36px,4.5vw,60px)/1.02 var(--serif);letter-spacing:-.02em;margin:0 0 6px}
+  .chapter h2 small{display:block;font:italic 22px var(--serif);color:var(--ink-2);margin-top:8px}
+  .chapter .lead{font:17px/1.55 var(--serif);color:var(--ink-2);margin:20px 0 26px}
+  .factrow{display:grid;grid-template-columns:1fr 1fr;gap:14px 20px;border-top:1px solid var(--line);padding-top:16px}
+  .fact .k{font:11px var(--mono);letter-spacing:.1em;text-transform:uppercase;color:var(--ink-3)}
+  .fact .v{font:15px var(--sans);margin-top:3px}
+  .fact .v.mono{font-family:var(--mono);font-size:13px}
+
+  .panels{display:flex;flex-direction:column;gap:40px}
+  .panel{border-top:1px solid var(--ink);padding-top:12px}
+  .panel-h{display:flex;justify-content:space-between;align-items:baseline;gap:20px;margin-bottom:6px}
+  .panel-h h3{font:400 20px var(--serif);margin:0}
+  .panel-h .sub{font:12px var(--sans);color:var(--ink-2)}
+  .legend{display:flex;gap:18px;font:11px var(--mono);color:var(--ink-2);letter-spacing:.04em;margin:8px 0 10px;flex-wrap:wrap}
+  .legend span{display:inline-flex;align-items:center;gap:6px}
+  .legend i{width:9px;height:9px;border-radius:50%;background:var(--ink);display:inline-block}
+  .legend i.l1{opacity:.12}.legend i.l2{opacity:.35}.legend i.l3{opacity:.7}
+  .legend i.acc{background:none;border:2px solid var(--accent);width:11px;height:11px}
+  svg{display:block;width:100%;height:auto;overflow:visible}
+  .matrix circle{transition:r .15s}
+  .matrix .cell:hover{stroke:var(--ink);stroke-width:1}
+  .rowlab{font:10px var(--mono);fill:var(--ink-3)}
+  .axlab{font:10px var(--mono);fill:var(--ink-3);letter-spacing:.04em}
+  .region{fill:var(--ink);opacity:.045}
+  .regionlab{font:10px var(--mono);fill:var(--ink-2);letter-spacing:.06em;text-transform:uppercase}
+  .tissue .name{font:11px var(--sans);fill:var(--ink-2)}
+  .tissue .name.top{fill:var(--ink);font-weight:600}
+  .tissue .val{font:10px var(--mono);fill:var(--ink-3)}
+  .attr .lab{font:12px var(--sans);fill:var(--ink)}
+  .attr .pct{font:11px var(--mono);fill:var(--ink-2)}
+  .attr .u{fill:var(--ink)}
+  .attr .u.off{fill:none;stroke:var(--line);stroke-width:1}
+
+  .tip{position:fixed;pointer-events:none;z-index:60;background:var(--ink);color:var(--paper);font:12px/1.4 var(--mono);padding:8px 10px;border-radius:2px;opacity:0;transform:translate(-50%,-125%);transition:opacity .12s;white-space:nowrap}
+  .tip b{color:var(--accent-soft);font-weight:400}
+
+  .controls{display:flex;align-items:center;gap:14px;font:12px var(--mono);color:var(--ink-2);margin-top:12px}
+  .controls input[type=range]{width:160px;accent-color:var(--ink)}
+
+  /* FINALE */
+  .finale{padding:90px clamp(20px,6vw,90px)}
+  .finale h2{font:400 clamp(32px,4vw,52px)/1.05 var(--serif);letter-spacing:-.02em;margin:0 0 10px;max-width:800px}
+  .finale p.lead{font:17px/1.55 var(--serif);color:var(--ink-2);max-width:620px;margin:0 0 40px}
+  .compare{display:grid;grid-template-columns:repeat(5,1fr);gap:28px 18px}
+  .compare .card{border-top:1px solid var(--ink);padding-top:10px}
+  .compare .card h4{font:600 13px var(--mono);margin:0 0 2px}
+  .compare .card .t{font:12px var(--sans);color:var(--ink-2);margin-bottom:10px;min-height:32px}
+  .compare .big{font:400 44px/1 var(--serif);letter-spacing:-.02em;font-variant-numeric:tabular-nums}
+  .compare .big small{font:11px var(--mono);letter-spacing:.06em;color:var(--ink-3);display:block;margin-top:6px;text-transform:uppercase}
+
+  .method{padding:60px clamp(20px,6vw,90px) 80px;border-top:1px solid var(--line);display:grid;grid-template-columns:1fr 1fr;gap:40px;font-size:14px;color:var(--ink-2)}
+  .method h5{font:12px var(--mono);letter-spacing:.12em;text-transform:uppercase;color:var(--ink);margin:0 0 10px}
+  .method p{margin:0 0 10px}
+
+  @media (max-width:900px){
+    .chapter{grid-template-columns:1fr}
+    .chapter .story{position:static}
+    .compare{grid-template-columns:repeat(2,1fr)}
+    .method{grid-template-columns:1fr}
+  }
+</style>
+</head>
+<body>
+<div class="mock-tag">макет · данные иллюстративные</div>
+<div class="tip" id="tip"></div>
+
+<section class="hero">
+  <canvas id="genomeField"></canvas>
+  <div class="masthead"><span>Датажурналистика · AlphaGenome Atlas</span><span>№ 01 · 2026</span></div>
+  <div class="hero-body">
+   <div class="hero-text">
+    <h1>Гены,<br>о которых вы <em>слышали</em></h1>
+    <p>Кофе, молоко, алкоголь, спринт, цвет глаз, брокколи, рыжие волосы, дезодорант, кинза, норовирус. Десять генов из застольных разговоров — и что нейросеть DeepMind предсказывает о каждой из тысяч возможных «опечаток» в них.</p>
+    <div class="counter">Замен в геноме просчитано заранее: <b id="cnt">0</b> · каждая точка ниже — одна</div>
+   </div>
+   <div class="karyo" id="karyo"><div class="karyo-hint">23 пары хромосом · наведите на золотую точку, кликните — перейдёте к главе</div></div>
+  </div>
+  <div class="scroll-hint">↓ листайте</div>
+</section>
+
+<section class="intro" id="intro">
+ <div class="intro-text">
+  <div class="intro-block"><h5>Геном — это текст</h5><p>Внутри каждой вашей клетки лежит текст длиной в три миллиарда букв. Алфавит — четыре буквы, A, C, G и T. Этот текст не читают, его исполняют: одни его участки — гены — служат инструкциями для сборки белков, другие — переключателями, которые решают, где, когда и насколько громко эти инструкции звучат. У печени и у нейрона текст один и тот же, разница — в том, какие переключатели нажаты.</p></div>
+  <div class="intro-block"><h5>Опечатка в одной букве</h5><p>Замена одной буквы на другую в этом тексте называется <span class="term" tabindex="0" data-t="Однонуклеотидный вариант (SNV)" data-d="Замена одной «буквы» ДНК на другую в определённой позиции. Самый частый тип различий между людьми.">однонуклеотидным вариантом</span>. У любых двух людей таких различий несколько миллионов, и подавляющее большинство из них не значат ничего. Но некоторые — значат: одна буква решает, перевариваете ли вы молоко и краснеете ли от вина — а другая слегка сдвигает шансы на то, что кинза покажется вам мыльной. Проблема в том, что заранее отличить «пустую» опечатку от важной было почти невозможно: буква, стоящая посреди гена, может оказаться безобидной, а буква в тысячах позиций от него — ключевой.</p></div>
+  <div class="intro-block"><h5>Что сделала DeepMind</h5><p>Модель AlphaGenome читает участок ДНК длиной в миллион букв и предсказывает, что этот участок делает: какие гены с него считываются и с какой силой, в каких типах клеток, как <span class="term" tabindex="0" data-t="Сплайсинг" data-d="«Нарезка» РНК: вырезание интронов и склейка экзонов. Опечатка на границе экзона сбивает нарезку.">нарезается РНК</span>, куда садятся <span class="term" tabindex="0" data-t="Белок-регулятор (транскрипционный фактор)" data-d="Белок, который узнаёт короткий мотив в ДНК, садится на него и включает или выключает соседние гены.">белки-регуляторы</span>. А дальше DeepMind сделала то, что руками не сделать: взяла каждую позицию генома, подставила в неё каждую из трёх возможных «не тех» букв — всего около девяти миллиардов замен — и прогнала через модель. Результат опубликован как AlphaGenome Atlas: петабайт предсказаний, бесплатно для некоммерческого использования.</p></div>
+  <div class="intro-block"><h5>Как читать оценку</h5><p>Для каждой замены Atlas выдаёт одно число — <span class="term" tabindex="0" data-t="AVI" data-d="AlphaGenome Variant Impact — сводная оценка Атласа, насколько замена меняет молекулярную работу участка. Не «вредность для здоровья».">AVI</span>, оценку того, насколько сильно опечатка меняет поведение участка (её собирают из предсказаний AlphaGenome, родственной модели <span class="term" tabindex="0" data-t="AlphaMissense" data-d="Модель DeepMind (2023), предсказывающая, насколько замена аминокислоты ломает белок. Дополняет AlphaGenome для кодирующих участков.">AlphaMissense</span> для белков и данных об эволюционной консервативности), — и объяснение, за счёт чего: сломан ли механизм нарезки РНК, изменилась ли громкость гена, перестал ли садиться белок-регулятор. Важно помнить, что это предсказание, а не эксперимент, и предсказание молекулярное. Модель говорит «этот вариант снизит выработку белка в клетках печени», а не «вы будете быстро бегать». Между первым и вторым — десятилетия исследований, и не всегда прямая дорога.</p></div>
+  <div class="intro-block"><h5>Что сделали мы</h5><p>Мы взяли десять генов, о которых вы, скорее всего, слышали в разговоре за столом, и для каждого запросили у Атласа две вещи. Во-первых, тот самый знаменитый вариант — что модель думает о нём и в каких тканях чувствует. Во-вторых, всё его окружение: каждую из 30 000 возможных опечаток в окне ±5 000 букв, чтобы увидеть, где участок хрупкий, а где ему всё равно. Всего 300 000 замен. В каждой главе четыре картины: карта окна с настоящими <span class="term" tabindex="0" data-t="Экзон" data-d="Кусок гена, который попадает в готовую РНК и кодирует белок. Между экзонами — интроны, которые вырезаются.">экзонами</span>, крупный план вокруг варианта, ткани и механизм поломки — и абзац о том, что модель увидела на самом деле, включая случаи, когда она не увидела ничего.</p></div>
+  <details class="srcs"><summary>Источники к введению</summary><ol><li><a href="https://deepmind.google/blog/alphagenome-atlas-a-predictive-map-of-every-possible-dna-letter-change-in-the-human-genome/" target="_blank" rel="noopener">DeepMind — AlphaGenome Atlas: molecular predictions for 9 billion human DNA variants (блог)</a></li><li><a href="https://storage.googleapis.com/deepmind-media/DeepMind.com/Blog/alphagenome-atlas-a-predictive-map-of-every-possible-dna-letter-change-in-the-human-genome/alphagenome-atlas.pdf" target="_blank" rel="noopener">AlphaGenome Atlas: in silico mutagenesis of the entire human genome (препринт, PDF)</a></li><li><a href="https://www.alphagenomedocs.com/api/atlas.html" target="_blank" rel="noopener">AlphaGenome API documentation — Atlas</a></li><li><a href="https://www.nature.com/articles/nature15393" target="_blank" rel="noopener">1000 Genomes Project — A global reference for human genetic variation, Nature 2015</a></li></ol></details>
+ </div>
+
+ <div class="intro-lab">
+  <div class="lab-h"><span class="lab-eyebrow">Попробуйте сами</span><h4>Сделайте опечатку в гене</h4>
+   <p>Игрушечный ген из 66 букв. Кликните на любую букву — она сменится на следующую (A → C → G → T). Справа — что «увидит» модель: громкость гена в трёх типах клеток и механизм поломки.</p></div>
+  <div id="mutator"></div>
+  <div class="lab-foot">Это схема, а не AlphaGenome: правила упрощены до четырёх — промотор, мотив белка-регулятора, граница экзона, код аминокислот. Настоящая модель смотрит на миллион букв контекста.</div>
+ </div>
+</section>
+<nav class="genenav" id="genenav"></nav>
+
+<main id="chapters"></main>
+
+<section class="finale">
+  <h2>Десять генов на одной линейке</h2>
+  <p class="lead">Сколько из всех возможных замен в гене модель считает по-настоящему разрушительными. Спойлер: почти нигде не больше пяти процентов — геном на удивление терпим к опечаткам.</p>
+  <div class="compare" id="compare"></div>
+</section>
+
+<section class="method">
+  <div>
+    <h5>Откуда данные</h5>
+    <p>AlphaGenome Atlas (Google DeepMind, 2026) — предрассчитанные предсказания для ~9 млрд однобуквенных замен в геноме человека: AVI-оценка вредности, атрибуция по механизму (сплайсинг, экспрессия, доступность хроматина, связывание ТФ) и эффект по сотням типов клеток.</p>
+    <p>Известные варианты («ген кофе», «ген лактазы») — из опубликованных GWAS и ClinVar; их rsID указаны в каждой главе.</p>
+  </div>
+  <div>
+    <h5>Что здесь макет</h5>
+    <p>Форма всех точек, размеры кружков и проценты в этой версии — синтетические, сгенерированы для показа дизайна. Реальные значения будут получены через AlphaGenome API по каждой позиции региона гена.</p>
+    <p>Модель предсказывает <em>молекулярный</em> эффект, а не «вы будете быстро бегать». Об этом будет отдельный дисклеймер на каждой главе.</p>
+  </div>
+</section>
+
+<script>
+/* ---------- данные глав (реальные гены и rsID, синтетические числа) ---------- */
+const GENES = [
+ {id:'LCT', name:'LCT / MCM6', trait:'Молоко', title:'Почему вы можете пить молоко', sub:'а половина планеты — нет',
+  lead:'Взрослые млекопитающие лактозу не переваривают. Но около 7 000 лет назад у пастухов Европы одна буква в энхансере гена LCT сменилась с C на T — и лактаза перестала выключаться после детства. Модель видит эту замену как усиление работы энхансера, сильнее всего — в слизистой кишечника.',
+  rs:'rs4988235', pos:'chr2:135 851 076', change:'C → T', where:'интрон MCM6, 14 кб выше LCT', freq:'≈ 70 % европейцев',
+  topTissue:'Тонкий кишечник', attr:{'Связывание ТФ':62,'Экспрессия':28,'Доступность хроматина':8,'Сплайсинг':2}, seed:11, hot:[[14,22],[37,42],[60,66]], famous:39, danger:2.1},
+ {id:'CYP1A2', name:'CYP1A2', trait:'Кофе', title:'Ген, который решает, уснёте ли вы после эспрессо', sub:'быстрые и медленные метаболизаторы',
+  lead:'Фермент CYP1A2 в печени разбирает кофеин. Замену C на A в первом интроне (−163) двадцать лет называют «геном быстрого кофе». Модель DeepMind с этим не согласна — и это самая интересная глава.',
+  rs:'rs762551', pos:'chr15:74 749 576', change:'C → A', where:'интрон 1, промоторная область', freq:'≈ 46 % носителей A/A',
+  topTissue:'Печень', attr:{'Экспрессия':71,'Связывание ТФ':19,'Доступность хроматина':9,'Сплайсинг':1}, seed:23, hot:[[5,12],[27,32],[48,55]], famous:8, danger:2.8},
+ {id:'ALDH2', name:'ALDH2', trait:'Алкоголь', title:'Почему у части Азии краснеет лицо от бокала вина', sub:'один аминокислотный сбой',
+  lead:'Замена G на A в кодирующей части ALDH2 меняет одну аминокислоту (Glu504Lys) — фермент почти перестаёт разбирать ацетальдегид. Здесь модель работает вместе с AlphaMissense: это не регуляция, это поломка самого белка.',
+  rs:'rs671', pos:'chr12:111 803 962', change:'G → A', where:'экзон 12, миссенс', freq:'≈ 30–40 % в Восточной Азии',
+  topTissue:'Печень', attr:{'Белок (миссенс)':83,'Экспрессия':7,'Сплайсинг':6,'Связывание ТФ':4}, seed:37, hot:[[8,14],[22,28],[42,48],[62,68]], famous:45, danger:4.6},
+ {id:'ACTN3', name:'ACTN3', trait:'Спринт', title:'«Ген спринтера», которого нет у каждого пятого', sub:'стоп-кодон вместо белка',
+  lead:'Замена C на T (R577X) ставит стоп-сигнал посреди гена — быстрые мышечные волокна остаются без белка α-актинина-3. Люди с двумя такими копиями живут нормально, но среди олимпийских спринтеров их почти нет.',
+  rs:'rs1815739', pos:'chr11:66 560 624', change:'C → T', where:'экзон 16, нонсенс', freq:'≈ 18 % X/X в Европе',
+  topTissue:'Скелетная мышца', attr:{'Белок (стоп)':77,'Экспрессия':14,'Сплайсинг':7,'Связывание ТФ':2}, seed:41, hot:[[3,8],[19,24],[34,39],[51,56]], famous:53, danger:3.9},
+ {id:'HERC2', name:'HERC2 / OCA2', trait:'Глаза', title:'Голубые глаза — это выключенный энхансер', sub:'одна буква на расстоянии 21 кб от гена',
+  lead:'Замена в интроне HERC2 ослабляет энхансер соседнего гена OCA2, отвечающего за пигмент. Меньше меланина в радужке — голубой цвет. Хрестоматийный пример того, что мутация может ломать ген, находясь совсем не в нём — и пример того, где у модели заканчиваются данные.',
+  rs:'rs12913832', pos:'chr15:28 120 472', change:'A → G', where:'интрон 86 HERC2, энхансер OCA2', freq:'≈ 80 % G/G в Северной Европе',
+  topTissue:'Меланоциты', attr:{'Связывание ТФ':58,'Доступность хроматина':27,'Экспрессия':13,'Сплайсинг':2}, seed:53, hot:[[12,17],[30,35],[57,61]], famous:32, danger:1.7},
+ {id:'TAS2R38', name:'TAS2R38', trait:'Брокколи', title:'Ген, из-за которого брокколи горчит', sub:'два вкуса одного мира',
+  lead:'Рецептор горького TAS2R38 существует в двух версиях. «Дегустаторы» чувствуют горечь в капусте, кофе и тонике, «недегустаторы» — нет. Разница — в трёх заменах, первая из которых меняет аминокислоту A49P.',
+  rs:'rs713598', pos:'chr7:141 973 545', change:'G → C', where:'единственный экзон, миссенс', freq:'≈ 50 / 50',
+  topTissue:'Вкусовые рецепторные клетки', attr:{'Белок (миссенс)':69,'Экспрессия':17,'Связывание ТФ':10,'Сплайсинг':4}, seed:67, hot:[[7,15],[24,30],[41,50]], famous:10, danger:3.3},
+ {id:'MC1R', name:'MC1R', trait:'Рыжие', title:'Рыжие волосы — это сломанный переключатель пигмента', sub:'рецессивный, но упрямый',
+  lead:'Рецептор MC1R переключает меланоциты с красно-жёлтого пигмента на тёмный. Замена R151C ломает переключатель — остаётся феомеланин: рыжие волосы, веснушки, кожа, которая не загорает. Нужно две сломанные копии, поэтому рыжие «перепрыгивают» через поколение.',
+  rs:'rs1805007', pos:'chr16:89 919 709', change:'C → T', where:'единственный экзон, миссенс R151C', freq:'≈ 10 % носителей в Европе',
+  topTissue:'Меланоциты', attr:{'Белок (миссенс)':74,'Экспрессия':13,'Связывание ТФ':9,'Сплайсинг':4}, seed:71, hot:[[6,14],[26,34],[46,58]], famous:30, danger:3.6},
+ {id:'ABCC11', name:'ABCC11', trait:'Дезодорант', title:'Ген, из-за которого половине Азии не нужен дезодорант', sub:'сухая ушная сера в комплекте',
+  lead:'Одна замена G538R в транспортёре ABCC11 — и апокриновые железы перестают выделять предшественники запаха пота. Заодно ушная сера становится сухой. Самый «бытовой» ген из всех: по нему в Японии реально проверяют, нужен ли вам дезодорант.',
+  rs:'rs17822931', pos:'chr16:48 224 287', change:'G → A', where:'экзон 4, миссенс G538R', freq:'≈ 80–95 % A/A в Восточной Азии',
+  topTissue:'Кожа', attr:{'Белок (миссенс)':66,'Экспрессия':21,'Сплайсинг':9,'Связывание ТФ':4}, seed:83, hot:[[9,16],[31,38],[55,63]], famous:34, danger:3.1},
+ {id:'OR6A2', name:'OR6A2', trait:'Кинза', title:'Почему кинза пахнет мылом', sub:'обонятельный рецептор с характером',
+  lead:'Кластер обонятельных рецепторов на 11-й хромосоме, и в нём OR6A2 — рецептор альдегидов, которые есть и в кинзе, и в мыле. Вариант в соседнем гене сдвигает шансы на то, что салат запахнет ванной. Самый обсуждаемый ген в интернете после «гена кофе» — и почти невидимый для модели.',
+  rs:'rs72921001', pos:'chr11:6 868 417', change:'C → A', where:'интрон OR10A2, кластер обонятельных рецепторов', freq:'аллель A ≈ 32 %',
+  topTissue:'Обонятельный эпителий', attr:{'Связывание ТФ':44,'Экспрессия':33,'Доступность хроматина':19,'Сплайсинг':4}, seed:97, hot:[[11,18],[40,46],[66,72]], famous:52, danger:1.9},
+ {id:'FUT2', name:'FUT2', trait:'Норовирус', title:'Ген, который защищает от кишечного гриппа', sub:'«несекреторы» и их суперсила',
+  lead:'Стоп-кодон W154X выключает FUT2 — организм перестаёт выставлять антигены группы крови на слизистых. Норовирусу не за что зацепиться: «несекреторы» почти не болеют самым частым кишечным вирусом. Обратная сторона — чуть другая микрофлора и меньше B12.',
+  rs:'rs601338', pos:'chr19:48 703 417', change:'G → A', where:'экзон 2, нонсенс W143X', freq:'≈ 20 % A/A в Европе',
+  topTissue:'Тонкий кишечник', attr:{'Белок (стоп)':71,'Экспрессия':16,'Сплайсинг':10,'Связывание ТФ':3}, seed:101, hot:[[4,10],[24,33],[49,60]], famous:28, danger:4.1},
+];
+const STORY={"LCT": ["Все млекопитающие рождаются с умением переваривать молоко и теряют его, как только перестают его пить. <span class=\"term\" tabindex=\"0\" data-t=\"Фермент\" data-d=\"Белок-катализатор: ускоряет одну конкретную химическую реакцию, например расщепление кофеина или лактозы.\">Фермент</span> лактаза, который расщепляет молочный сахар, после отлучения от груди выключается — так задумано. У большинства взрослых людей на планете он выключен до сих пор: стакан молока для них — это вздутие и бег до ближайшего туалета.", "Но около семи тысяч лет назад у кого-то из первых пастухов Европы в ДНК произошла опечатка. Не в самом гене лактазы, а в переключателе, который стоит на четырнадцать тысяч букв выше по тексту, внутри соседнего гена MCM6. Буква C сменилась на T — и выключатель заклинило во включённом положении. Лактаза перестала отключаться. Это одна из самых сильных историй <span class=\"term\" tabindex=\"0\" data-t=\"Естественный отбор\" data-d=\"Если вариант гена помогает выживать и оставлять потомство, за поколения он становится частым в популяции.\">естественного отбора</span> в истории человека: за считанные тысячелетия вариант разошёлся по всей Северной Европе, где сегодня его носят до девяноста процентов взрослых.", "Любопытно, что археология показывает: молоко в Европе пили за тысячи лет до того, как этот вариант стал частым. Похоже, отбор подтолкнули не сытые времена, а голод и эпидемии, когда способность пить сырое молоко без последствий становилась вопросом выживания. Модель видит в этой замене именно то, что предполагали биологи: усиление работы переключателя, сильнее всего — в клетках тонкого кишечника."], "CYP1A2": ["Кофеин из вашей чашки разбирает в основном один <span class=\"term\" tabindex=\"0\" data-t=\"Фермент\" data-d=\"Белок-катализатор: ускоряет одну конкретную химическую реакцию, например расщепление кофеина или лактозы.\">фермент</span> — CYP1A2, и работает он в печени. От того, насколько он быстрый, зависит, сколько кофеин продержится в крови: у среднего человека — около пяти часов, но разброс огромный. Есть люди, которым эспрессо после ужина не мешает уснуть, и есть те, кому обеденный капучино обеспечивает бессонницу.", "Значительную часть этого разброса объясняет одна буква в первом <span class=\"term\" tabindex=\"0\" data-t=\"Интрон\" data-d=\"Участок гена, который вырезается из РНК до сборки белка. Белок не кодирует, но часто содержит переключатели.\">интроне</span> гена — в участке, который не кодирует белок, а регулирует, сколько его сделать. У носителей двух букв A ген легче «разгоняется» в ответ на внешние стимулы, и таких людей условно называют быстрыми метаболизаторами; у носителей хотя бы одной C фермент ленивее. Деление на быстрых и медленных — упрощение, но оно прижилось. Одно из исследований две тысячи шестого года даже связало кофе с риском инфаркта — но только у медленных метаболизаторов; у быстрых связи не нашли. Это спорный результат, и его не раз пытались перепроверить, но идея «ген решает, полезен ли вам кофе» с тех пор живёт своей жизнью.", "Есть и небольшая ирония: CYP1A2 разгоняется от курения. Курильщики выводят кофеин примерно в полтора раза быстрее — и, бросив курить, часто с удивлением обнаруживают, что привычные три чашки внезапно стали слишком крепкими."], "ALDH2": ["Алкоголь в организме разбирается в два шага: сначала спирт превращается в ацетальдегид, потом ацетальдегид — в безобидный ацетат. Ацетальдегид — вещество токсичное, именно оно отвечает за красное лицо, сердцебиение и тошноту. За второй шаг отвечает <span class=\"term\" tabindex=\"0\" data-t=\"Фермент\" data-d=\"Белок-катализатор: ускоряет одну конкретную химическую реакцию, например расщепление кофеина или лактозы.\">фермент</span> ALDH2, и у него есть знаменитая сломанная версия.", "Замена одной буквы в двенадцатом <span class=\"term\" tabindex=\"0\" data-t=\"Экзон\" data-d=\"Кусок гена, который попадает в готовую РНК и кодирует белок. Между экзонами — интроны, которые вырезаются.\">экзоне</span> гена меняет одну <span class=\"term\" tabindex=\"0\" data-t=\"Аминокислота\" data-d=\"«Бусина» белка. Белок — цепочка из аминокислот, порядок которых записан в гене тройками букв.\">аминокислоту</span> в белке, и фермент почти перестаёт работать. Хуже того, сломанный белок мешает работать и нормальному — поэтому достаточно одной сломанной <span class=\"term\" tabindex=\"0\" data-t=\"Копия гена (аллель)\" data-d=\"У каждого гена две копии — от матери и от отца. Признак может зависеть от одной сломанной копии или требовать двух.\">копии</span> из двух, чтобы после бокала вина лицо залилось краской. Этот вариант носит от трети до половины жителей Восточной Азии и почти никто за её пределами: он возник в одной популяции и разошёлся вместе с ней.", "У этой истории есть серьёзная сторона. Ацетальдегид — канцероген, и у носителей варианта, которые всё равно пьют, заметно выше риск рака пищевода. Так что «азиатский румянец» — не курьёз, а сигнал организма. Обратите внимание, где на карте замен сидит этот вариант: посреди <span class=\"term\" tabindex=\"0\" data-t=\"Кодирующий участок\" data-d=\"Часть гена, буквы которой тройками переводятся в аминокислоты белка. Всего около 1–2 % генома.\">кодирующего участка</span>, среди других тёмных точек. Здесь модель работает вместе с <span class=\"term\" tabindex=\"0\" data-t=\"AlphaMissense\" data-d=\"Модель DeepMind (2023), предсказывающая, насколько замена аминокислоты ломает белок. Дополняет AlphaGenome для кодирующих участков.\">AlphaMissense</span> — предсказанием того, что делает с белком замена аминокислоты. Это не регуляция, это поломка самой детали."], "ACTN3": ["В быстрых мышечных волокнах — тех, что отвечают за рывок, прыжок и удар — есть белок альфа-актинин-3. Он укрепляет структуру волокна и помогает ему сокращаться резко и мощно. И примерно у каждого пятого европейца этого белка нет вовсе.", "Причина — замена C на T в шестнадцатом <span class=\"term\" tabindex=\"0\" data-t=\"Экзон\" data-d=\"Кусок гена, который попадает в готовую РНК и кодирует белок. Между экзонами — интроны, которые вырезаются.\">экзоне</span> гена ACTN3. Она превращает код <span class=\"term\" tabindex=\"0\" data-t=\"Аминокислота\" data-d=\"«Бусина» белка. Белок — цепочка из аминокислот, порядок которых записан в гене тройками букв.\">аминокислоты</span> в <span class=\"term\" tabindex=\"0\" data-t=\"Нонсенс (стоп-кодон)\" data-d=\"Замена, превращающая код аминокислоты в сигнал «стоп». Сборка белка обрывается раньше времени.\">стоп-сигнал</span>: клетка читает инструкцию, доходит до этой буквы и прекращает сборку белка на середине. Клетка распознаёт бракованную инструкцию и уничтожает её, так что белка не образуется вовсе. Люди с двумя такими <span class=\"term\" tabindex=\"0\" data-t=\"Копия гена (аллель)\" data-d=\"У каждого гена две копии — от матери и от отца. Признак может зависеть от одной сломанной копии или требовать двух.\">копиями</span> совершенно здоровы — родственный белок берёт часть работы на себя, — но мышцы у них устроены чуть иначе: меньше «взрывной» силы, а обмен веществ в волокнах сдвинут в сторону выносливости.", "Спортивные генетики заметили это ещё в две тысячи третьем году: среди элитных австралийских спринтеров — бегунов, пловцов, велосипедистов — людей с двумя сломанными копиями оказалось втрое меньше, чем в среднем, а среди женщин-спринтеров не нашлось ни одной. Так ACTN3 стал «геном скорости», и с тех пор его включают почти во все коммерческие спортивные тесты. Стоит только помнить, что для обычного человека эффект мал и от исследования к исследованию скачет; консенсус спортивных генетиков — такие тесты не годятся для <span class=\"term\" tabindex=\"0\" data-t=\"Естественный отбор\" data-d=\"Если вариант гена помогает выживать и оставлять потомство, за поколения он становится частым в популяции.\">отбора</span> талантов. Ген отсекает не от занятий спортом, а разве что от финала на сто метров."], "HERC2": ["Цвет глаз — это количество пигмента <span class=\"term\" tabindex=\"0\" data-t=\"Меланин\" data-d=\"Пигмент кожи, волос и радужки. Делают его клетки-меланоциты; тёмный эумеланин и красно-жёлтый феомеланин.\">меланина</span> в радужке. Много — карие, мало — голубые; никакого голубого красителя в глазу нет, это оптический эффект, как цвет неба. Главный ген пигмента радужки — OCA2. Но самая известная «мутация голубых глаз» находится не в нём.", "Она сидит в соседнем гене HERC2, в его восемьдесят шестом <span class=\"term\" tabindex=\"0\" data-t=\"Интрон\" data-d=\"Участок гена, который вырезается из РНК до сборки белка. Белок не кодирует, но часто содержит переключатели.\">интроне</span>, на расстоянии около двадцати тысяч букв от OCA2. Этот участок — переключатель, который усиливает работу OCA2 в клетках, производящих пигмент. Замена A на G ослабляет переключатель, OCA2 работает тише, меланина меньше — и радужка голубая. Это хрестоматийный пример того, как опечатка может ломать ген, физически находясь в другом гене. До появления моделей вроде AlphaGenome такие связи находили годами; теперь их можно предсказывать.", "Есть и красивый вывод из популяционной генетики: у голубоглазых европейцев этот вариант один и тот же, с одинаковым генетическим «окружением» — то есть он возник один раз, у одного человека, и все они в некотором смысле его потомки. В 2008 году его возраст оценили в шесть-десять тысяч лет; с тех пор древняя ДНК отодвинула дату — голубоглазые охотники-собиратели жили в Испании ещё семь тысяч лет назад, а сам вариант, вероятно, много старше и пришёл из Западной Азии."], "TAS2R38": ["В тысяча девятьсот тридцать первом году химик Артур Фокс рассыпал в лаборатории порошок фенилтиокарбамида. Его коллега пожаловался на невыносимую горечь в воздухе, а сам Фокс не почувствовал ничего. Так открыли, что люди делятся на «дегустаторов» и «недегустаторов» горького — и что это наследуется.", "Семьдесят лет спустя нашли причину: ген рецептора горького вкуса TAS2R38 существует в двух основных версиях, которые отличаются тремя буквами. Первая из них меняет <span class=\"term\" tabindex=\"0\" data-t=\"Аминокислота\" data-d=\"«Бусина» белка. Белок — цепочка из аминокислот, порядок которых записан в гене тройками букв.\">аминокислоту</span> в самом начале белка-рецептора, и «недегустаторская» версия рецептора попросту не срабатывает на эти молекулы. Похожие соединения есть в брокколи, брюссельской капусте и другой капустной родне, поэтому одни люди искренне не понимают, что не так с брокколи, а другие не понимают, как её вообще можно есть.", "Самое интересное — что обе версии гена живут в человечестве примерно поровну. Долго считалось, что их уравновешивает <span class=\"term\" tabindex=\"0\" data-t=\"Естественный отбор\" data-d=\"Если вариант гена помогает выживать и оставлять потомство, за поколения он становится частым в популяции.\">отбор</span>: чувствовать горечь полезно (многие яды горькие), но и не чувствовать тоже чем-то полезно. Сейчас эта красивая гипотеза оспаривается — следы такого отбора находят только в глубокой древности, а нынешнее распределение неплохо объясняется просто историей расселения. У шимпанзе, кстати, тоже есть свои «недегустаторы», но их версия гена сломана в другом месте: эволюция пришла к одному и тому же результату дважды и независимо."], "MC1R": ["Пигмент в коже и волосах бывает двух видов: тёмный эу<span class=\"term\" tabindex=\"0\" data-t=\"Меланин\" data-d=\"Пигмент кожи, волос и радужки. Делают его клетки-меланоциты; тёмный эумеланин и красно-жёлтый феомеланин.\">меланин</span> и красно-жёлтый феомеланин. Какой из них будут делать клетки, решает рецептор MC1R на их поверхности — своего рода переключатель. Пришёл сигнал, рецептор включился — клетка делает тёмный пигмент. Рецептор сломан — остаётся красный.", "Замена в гене MC1R, меняющая <span class=\"term\" tabindex=\"0\" data-t=\"Аминокислота\" data-d=\"«Бусина» белка. Белок — цепочка из аминокислот, порядок которых записан в гене тройками букв.\">аминокислоту</span> в сто пятьдесят первой позиции, — одна из нескольких известных «рыжих» поломок. Одной сломанной <span class=\"term\" tabindex=\"0\" data-t=\"Копия гена (аллель)\" data-d=\"У каждого гена две копии — от матери и от отца. Признак может зависеть от одной сломанной копии или требовать двух.\">копии</span> обычно недостаточно: у носителей будет разве что веснушки и склонность сгорать на солнце. Но если сломаны обе — волосы рыжие, кожа почти не загорает. Поэтому рыжие дети рождаются у двух нерыжих родителей и «перепрыгивают» через поколение, сбивая с толку всех родственников.", "У рыжих есть и менее очевидные особенности, за которые отвечает тот же рецептор. В небольших исследованиях им требовалось примерно на пятую часть больше анестетика и они иначе чувствовали боль — рецептор MC1R работает не только в коже. А главное, феомеланин хуже защищает от ультрафиолета, и риск меланомы у носителей сломанных копий выше, независимо от того, рыжие они или нет. Это тот случай, когда одна буква в гене — повод для солнцезащитного крема."], "ABCC11": ["Запах пота — это не сам пот. Апокриновые железы в подмышках выделяют жидкость почти без запаха, а неприятный аромат создают бактерии, которые её перерабатывают. Чтобы бактериям было что перерабатывать, железа должна вытолкнуть наружу предшественники пахучих молекул. Этим занимается транспортёр ABCC11.", "Замена G на A в четвёртом <span class=\"term\" tabindex=\"0\" data-t=\"Экзон\" data-d=\"Кусок гена, который попадает в готовую РНК и кодирует белок. Между экзонами — интроны, которые вырезаются.\">экзоне</span> меняет одну <span class=\"term\" tabindex=\"0\" data-t=\"Аминокислота\" data-d=\"«Бусина» белка. Белок — цепочка из аминокислот, порядок которых записан в гене тройками букв.\">аминокислоту</span>, и транспортёр перестаёт работать. Железа выделяет пот, но без «сырья» для бактерий, и запаха почти нет. Заодно у таких людей сухая, рассыпчатая ушная сера вместо влажной — её консистенция зависит от того же белка. Это, пожалуй, самый бытовой ген во всём списке: по нему можно с высокой точностью сказать, нужен ли человеку дезодорант.", "Географическая картина здесь поразительная. В Восточной Азии две сломанные <span class=\"term\" tabindex=\"0\" data-t=\"Копия гена (аллель)\" data-d=\"У каждого гена две копии — от матери и от отца. Признак может зависеть от одной сломанной копии или требовать двух.\">копии</span> носят до девяноста процентов людей (у северных китайцев — почти все, у японцев — около восьмидесяти процентов), в Европе — около двух процентов, в Африке южнее Сахары вариант почти не встречается. Почему так вышло — до конца неясно; возможно, <span class=\"term\" tabindex=\"0\" data-t=\"Естественный отбор\" data-d=\"Если вариант гена помогает выживать и оставлять потомство, за поколения он становится частым в популяции.\">отбор</span> шёл не за запахом, а за чем-то ещё, что делает этот транспортёр. В Японии, где запах пота исторически считался редкостью, его наличие долго рассматривали как медицинское состояние. А в западных странах, где сломанный вариант редок, дезодорант стал индустрией."], "OR6A2": ["Мало какой продукт делит людей так, как кинза. Для одних это свежая пряная зелень, для других — мыло, причём не фигурально: они описывают вкус как «жидкость для мытья посуды». Джулия Чайлд её терпеть не могла и обещала выбросить на пол, если найдёт в тарелке. Долго считалось, что это вопрос привычки, пока в две тысячи двенадцатом году генетическая компания не сравнила ДНК десятков тысяч своих клиентов.", "Самая сильная связь нашлась на одиннадцатой хромосоме, в плотном кластере генов обонятельных рецепторов. Главный подозреваемый — соседний OR6A2: этот рецептор чувствителен к альдегидам, классу молекул, которые есть и в аромате кинзы, и в мыле. Как именно вариант меняет его работу, до сих пор не установлено; сам он лежит в не<span class=\"term\" tabindex=\"0\" data-t=\"Кодирующий участок\" data-d=\"Часть гена, буквы которой тройками переводятся в аминокислоты белка. Всего около 1–2 % генома.\">кодирующей части</span> соседнего гена-рецептора, и модель относит его эффект к регуляции, а не к поломке белка.", "При этом «ген кинзы» — хороший пример того, как мало иногда решает ген. Вариант объясняет меньше процента разницы между людьми, а вся наследственность вкуса к кинзе — меньше десятой части; культура, кухня и привычка значат больше. Среди людей латиноамериканского происхождения, где кинзу едят с детства, её не любят всего четыре процента, среди выходцев из Восточной Азии — каждый пятый. И многие из тех, кому кинза казалась мылом, со временем к ней привыкают — гены не приговор, а стартовые условия."], "FUT2": ["Группа крови есть не только у крови. Те же молекулы-<span class=\"term\" tabindex=\"0\" data-t=\"Антиген\" data-d=\"Молекула на поверхности клетки, по которой её узнают — иммунная система или вирус. Антигены групп крови — из этого ряда.\">антигены</span>, по которым различают группы A, B и O, у большинства людей выставлены на слизистых: в слюне, в кишечнике, в дыхательных путях. Таких людей называют секреторами. Примерно каждый пятый европеец — несекретор: на его слизистых этих антигенов нет.", "Причина — замена G на A во втором <span class=\"term\" tabindex=\"0\" data-t=\"Экзон\" data-d=\"Кусок гена, который попадает в готовую РНК и кодирует белок. Между экзонами — интроны, которые вырезаются.\">экзоне</span> гена FUT2, которая ставит <span class=\"term\" tabindex=\"0\" data-t=\"Нонсенс (стоп-кодон)\" data-d=\"Замена, превращающая код аминокислоты в сигнал «стоп». Сборка белка обрывается раньше времени.\">стоп-сигнал</span> посреди инструкции для <span class=\"term\" tabindex=\"0\" data-t=\"Фермент\" data-d=\"Белок-катализатор: ускоряет одну конкретную химическую реакцию, например расщепление кофеина или лактозы.\">фермента</span>. Фермент не собирается, антигены на слизистые не попадают. И здесь начинается самое интересное: норовирус — самый частый возбудитель кишечного гриппа, тот самый «круизный вирус», — чтобы проникнуть в клетку кишечника, цепляется именно за эти антигены. Несекреторам он почти ничего не может сделать. Люди с этой опечаткой проходят через вспышки норовируса в детских садах и на круизных лайнерах, даже не заметив.", "Бесплатных суперсил не бывает. У несекреторов иначе устроена <span class=\"term\" tabindex=\"0\" data-t=\"Микрофлора (микробиота)\" data-d=\"Сообщество бактерий в кишечнике. Его состав зависит и от питания, и от генов хозяина.\">микрофлора</span> кишечника, немного выше риск болезни Крона, а к другим кишечным инфекциям восприимчивость перераспределена: от ротавируса они защищены лучше, от некоторых кишечных палочек — хуже. Даже витамин B12 в их крови измеряется иначе — его формально больше, но за счёт неактивной фракции. Возможно, поэтому оба варианта гена живут в человечестве бок о бок: то, что защищает от одного, подставляет под другое — хотя строго это пока не доказано."]};
+const SOURCES={"LCT": [["dbSNP rs4988235", "https://www.ncbi.nlm.nih.gov/snp/rs4988235"], ["Evershed et al. Dairying, diseases and the evolution of lactase persistence in Europe. Nature 2022", "https://pubmed.ncbi.nlm.nih.gov/35896751/"], ["Leseva et al. Sci Rep 2018 — механизм энхансера −13910", "https://www.nature.com/articles/s41598-018-23957-4"]], "CYP1A2": [["dbSNP rs762551", "https://www.ncbi.nlm.nih.gov/snp/rs762551"], ["Cornelis et al. Coffee, CYP1A2 genotype, and risk of myocardial infarction. JAMA 2006", "https://pubmed.ncbi.nlm.nih.gov/16522833/"], ["KNMP — Pharmacogenetics background: CYP1A2", "https://www.knmp.nl/sites/default/files/2023-11/CYP1A2_English.pdf"], ["Kroon. Drug interactions with smoking (CYP1A2 и кофеин)", "https://www.medscape.com/viewarticle/562754_4"]], "ALDH2": [["dbSNP rs671", "https://www.ncbi.nlm.nih.gov/snp/rs671"], ["Chang et al. ALDH2 polymorphism and alcohol-related cancers in Asians. J Biomed Sci 2017", "https://link.springer.com/article/10.1186/s12929-017-0327-y"]], "ACTN3": [["ClinVar — ACTN3 c.1729C>T (p.Arg577Ter)", "https://www.ncbi.nlm.nih.gov/clinvar/RCV000019974/"], ["Yang et al. ACTN3 genotype is associated with human elite athletic performance. AJHG 2003", "https://pubmed.ncbi.nlm.nih.gov/12879365/"], ["Pickering & Kiely. ACTN3: more than just a gene for speed. Front Physiol 2017", "https://www.frontiersin.org/journals/physiology/articles/10.3389/fphys.2017.01080/full"], ["Consensus statement on DTC genetic testing for sports performance. BJSM 2015", "https://pmc.ncbi.nlm.nih.gov/articles/PMC4680136/"]], "HERC2": [["dbSNP rs12913832", "https://www.ncbi.nlm.nih.gov/snp/rs12913832"], ["Visser et al. HERC2 rs12913832 modulates pigmentation by attenuating chromatin-loop formation. Genome Res 2012", "https://genome.cshlp.org/content/22/3/446"], ["Eiberg et al. Blue eye color in humans may be caused by a founder mutation. Hum Genet 2008 (ScienceDaily)", "https://www.sciencedaily.com/releases/2008/01/080130170343.htm"], ["Further insight into the global variability of the OCA2-HERC2 locus. Sci Rep 2021", "https://www.nature.com/articles/s41598-021-01940-w"]], "TAS2R38": [["dbSNP rs713598", "https://www.ncbi.nlm.nih.gov/snp/rs713598"], ["Risso et al. Global diversity in the TAS2R38 bitter taste receptor. Sci Rep 2016", "https://www.nature.com/articles/srep25506"], ["Wooding et al. Independent evolution of bitter-taste sensitivity in humans and chimpanzees. Nature 2006", "https://www.nature.com/articles/nature04655"], ["Learn.Genetics (Utah) — PTC: the genetics of bitter taste", "https://learn.genetics.utah.edu/content/basics/ptc/"]], "MC1R": [["Ensembl rs1805007", "https://rest.ensembl.org/variation/human/rs1805007?content-type=application/json"], ["Raimondi et al. MC1R variants, melanoma and red hair color phenotype: a meta-analysis. Int J Cancer 2008", "https://onlinelibrary.wiley.com/doi/10.1002/ijc.23396"], ["Liem et al. Anesthetic requirement is increased in redheads. Anesthesiology 2004", "https://pubmed.ncbi.nlm.nih.gov/15277908/"]], "ABCC11": [["Ensembl rs17822931 (частоты 1000 Genomes)", "https://rest.ensembl.org/variation/human/rs17822931?content-type=application/json;pops=1"], ["Toyoda et al. Diagnosis of axillary osmidrosis by genotyping of ABCC11. Biomed Res Int 2016", "https://pubmed.ncbi.nlm.nih.gov/27057547/"], ["Ohashi et al. Impact of natural selection on an ABCC11 SNP determining earwax type. Mol Biol Evol 2011", "https://academic.oup.com/mbe/article/28/1/849/987325"]], "OR6A2": [["Ensembl rs72921001", "https://rest.ensembl.org/variation/human/rs72921001?content-type=application/json"], ["Eriksson et al. A genetic variant near olfactory receptor genes influences cilantro preference. Flavour 2012", "https://flavourjournal.biomedcentral.com/articles/10.1186/2044-7248-1-22"], ["Mauer & El-Sohemy. Prevalence of cilantro disliking among ethnocultural groups. Flavour 2012", "https://flavourjournal.biomedcentral.com/articles/10.1186/2044-7248-1-8"]], "FUT2": [["Ensembl rs601338", "https://rest.ensembl.org/variation/human/rs601338?content-type=application/json"], ["Thorven et al. A homozygous nonsense mutation in FUT2 provides resistance to norovirus. J Virol 2005", "https://pubmed.ncbi.nlm.nih.gov/16306606/"], ["Carlsson et al. Strong but not absolute protection against GII.4 norovirus. PLoS One 2009", "https://journals.plos.org/plosone/article?id=10.1371%2Fjournal.pone.0005593"], ["Velkova et al. FUT2 secretor variant influences serum vitamin B12 via holo-haptocorrin. HMG 2017", "https://academic.oup.com/hmg/article/26/24/4975/4460048"], ["McGovern et al. FUT2 non-secretor status is associated with Crohn's disease. HMG 2010", "https://pubmed.ncbi.nlm.nih.gov/20570966/"]]};
+const TISSUES=['Печень','Тонкий кишечник','Скелетная мышца','Меланоциты','Вкусовые рецепторные клетки','Обонятельный эпителий','Мозг (кора)','Сердце','Почка','Лёгкое','Кожа','Жировая ткань','Кровь (лимфоциты)','Поджелудочная','Желудок','Толстая кишка','Щитовидная','Селезёнка','Нерв','Артерия','Яичник'];
+
+/* seeded random */
+function rng(seed){let s=seed*9301+49297;return()=>{s=(s*9301+49297)%233280;return s/233280}}
+
+/* ---------- hero field ---------- */
+(function(){
+  const c=document.getElementById('genomeField'),ctx=c.getContext('2d');
+  let W,H,dots=[];
+  function resize(){W=c.width=c.offsetWidth*devicePixelRatio;H=c.height=c.offsetHeight*devicePixelRatio;ctx.setTransform(devicePixelRatio,0,0,devicePixelRatio,0,0);
+    dots=[];const gap=14,r=rng(7);
+    for(let y=gap;y<c.offsetHeight;y+=gap)for(let x=gap;x<c.offsetWidth;x+=gap){const v=r();dots.push({x,y,a:v<.85?.05+v*.06:v<.97?.2:.55,ph:r()*6.28,acc:v>.995})}}
+  function draw(t){ctx.clearRect(0,0,W,H);for(const d of dots){const pulse=.6+.4*Math.sin(t/900+d.ph);ctx.beginPath();ctx.arc(d.x,d.y,d.acc?2.4:1.6,0,6.28);ctx.fillStyle=d.acc?`rgba(196,144,30,${.5+.4*pulse})`:`rgba(23,22,15,${d.a*pulse})`;ctx.fill()}requestAnimationFrame(draw)}
+  resize();addEventListener('resize',resize);requestAnimationFrame(draw);
+  const el=document.getElementById('cnt'),target=9_000_000_000,t0=performance.now();
+  (function tick(now){const p=Math.min(1,(now-t0)/2600),e=1-Math.pow(1-p,3);el.textContent=Math.round(target*e).toLocaleString('ru-RU');if(p<1)requestAnimationFrame(tick)})(t0);
+})();
+
+/* ---------- tooltip ---------- */
+const tip=document.getElementById('tip');
+function showTip(html,x,y){tip.innerHTML=html;tip.style.left=x+'px';tip.style.top=y+'px';tip.style.opacity=1}
+function hideTip(){tip.style.opacity=0}
+
+/* ---------- builders ---------- */
+const NS='http://www.w3.org/2000/svg';
+const el=(n,a={},parent)=>{const e=document.createElementNS(NS,n);for(const k in a)e.setAttribute(k,a[k]);parent&&parent.appendChild(e);return e};
+
+function matrixData(g){
+  const r=rng(g.seed),N=80,rows=['A','C','G','T'];const ref=[];const cells=[];
+  for(let i=0;i<N;i++){ref.push(rows[Math.floor(r()*4)]);
+    const inHot=g.hot.some(([a,b])=>i>=a&&i<=b);
+    for(const alt of rows){if(alt===ref[i])continue;let v=r();v=inHot?Math.pow(v,1.6):Math.pow(v,6)*.5;if(i===g.famous&&alt===g.change.slice(-1))v=.92;cells.push({i,alt,v,famous:i===g.famous&&alt===g.change.slice(-1)})}}
+  return {N,cells,ref};
+}
+function buildMatrix(g,host){
+  const {N,cells}=matrixData(g);const cw=11,rh=22,left=30,top=28;
+  const svg=el('svg',{viewBox:`0 0 ${left+N*cw} ${top+3*rh+44}`,class:'matrix'},host);
+  g.hot.forEach(([a,b],k)=>{el('rect',{x:left+a*cw-cw/2,y:top-10,width:(b-a+1)*cw,height:3*rh+6,class:'region'},svg);el('text',{x:left+a*cw-cw/2,y:top-14,class:'regionlab'},svg).textContent=k===0?'экзон':'экзон '+(k+1)});
+  ['ALT 1','ALT 2','ALT 3'].forEach((t,k)=>el('text',{x:0,y:top+k*rh+4,class:'rowlab'},svg).textContent=t);
+  const byPos={};cells.forEach(c=>{(byPos[c.i]=byPos[c.i]||[]).push(c)});
+  const circles=[];
+  for(let i=0;i<N;i++)byPos[i].forEach((c,k)=>{const cir=el('circle',{cx:left+i*cw,cy:top+k*rh,r:c.v>.55?4.4:c.v>.25?3.4:2.4,fill:c.famous?'var(--accent)':'var(--ink)','fill-opacity':c.famous?1:.06+c.v*.85,class:'cell'},svg);cir.__d=c;circles.push(cir);
+    if(c.famous){el('circle',{cx:left+i*cw,cy:top+k*rh,r:8,fill:'none',stroke:'var(--accent)','stroke-width':1.5},svg);const t=el('text',{x:left+i*cw,y:top+3*rh+36,class:'regionlab','text-anchor':'middle'},svg);t.textContent=g.rs;t.style.fill='var(--accent)'}
+    cir.addEventListener('mousemove',e=>showTip(`позиция +${c.i*7} · ${g.change[0]} → ${c.alt}<br><b>AVI ${c.v.toFixed(2)}</b> · ${c.v>.55?'сильный эффект':c.v>.25?'умеренный':'нейтрально'}${c.famous?'<br>★ '+g.rs:''}`,e.clientX,e.clientY));
+    cir.addEventListener('mouseleave',hideTip)});
+  el('text',{x:left,y:top+3*rh+18,class:'axlab'},svg).textContent='← 5′  положение в гене (шаг 7 п.о.)';
+  el('text',{x:left+N*cw,y:top+3*rh+18,class:'axlab','text-anchor':'end'},svg).textContent='3′ →';
+  return circles;
+}
+function buildTissues(g,host){
+  const r=rng(g.seed+100);const rows=TISSUES.map(t=>({t,v:t===g.topTissue?.95:Math.pow(r(),2.2)*.5})).sort((a,b)=>b.v-a.v);
+  const rh=22,w=520,svg=el('svg',{viewBox:`0 0 ${w} ${rows.length*rh}`,class:'tissue'},host);
+  rows.forEach((d,k)=>{const y=k*rh+rh/2;const top=d.t===g.topTissue;
+    el('line',{x1:180,x2:w-40,y1:y,y2:y,stroke:'var(--line)','stroke-width':1},svg);
+    el('text',{x:170,y:y+4,class:'name'+(top?' top':''),'text-anchor':'end'},svg).textContent=d.t;
+    const cx=180+d.v*(w-220);
+    const c=el('circle',{cx,cy:y,r:3+d.v*9,fill:top?'var(--accent)':'var(--ink)','fill-opacity':top?1:.18+d.v,stroke:'var(--paper)','stroke-width':2},svg);
+    el('text',{x:w-34,y:y+4,class:'val'},svg).textContent=(d.v>0?'+':'')+(d.v*2.4).toFixed(2);
+    c.addEventListener('mousemove',e=>showTip(`${d.t}<br><b>Δ экспрессии ${(d.v*2.4).toFixed(2)} log₂</b>`,e.clientX,e.clientY));c.addEventListener('mouseleave',hideTip)});
+}
+function buildAttr(g,host){
+  const keys=Object.keys(g.attr),rh=30,w=570,units=20,svg=el('svg',{viewBox:`0 0 ${w} ${keys.length*rh}`,class:'attr'},host);
+  keys.forEach((k,i)=>{const y=i*rh+rh/2,n=Math.round(g.attr[k]/100*units);
+    el('text',{x:0,y:y+4,class:'lab'},svg).textContent=k;
+    for(let u=0;u<units;u++)el('rect',{x:190+u*15,y:y-5,width:10,height:10,rx:1,class:'u'+(u<n?'':' off'),'fill-opacity':u<n?(i===0?1:.55):1},svg);
+    el('text',{x:w-10,y:y+4,class:'pct','text-anchor':'end'},svg).textContent=g.attr[k]+' %'});
+}
+
+
+/* ---------- karyotype map ---------- */
+(function(){
+  const CHR=[['1',248.9,123.4],['2',242.2,93.9],['3',198.3,90.9],['4',190.2,50.0],['5',181.5,48.8],['6',170.8,59.8],['7',159.3,60.1],['8',145.1,45.2],['9',138.4,43.0],['10',133.8,39.8],['11',135.1,53.4],['12',133.3,35.5],['13',114.4,17.7],['14',107.0,17.2],['15',102.0,19.0],['16',90.3,36.8],['17',83.3,25.1],['18',80.4,18.5],['19',58.6,26.2],['20',64.4,28.1],['21',46.7,12.0],['22',50.8,15.0],['X',156.0,60.6],['Y',57.2,10.4]];
+  const LOCI={LCT:['2',135.85],CYP1A2:['15',74.75],ALDH2:['12',111.80],ACTN3:['11',66.56],HERC2:['15',28.12],TAS2R38:['7',141.97],MC1R:['16',89.92],ABCC11:['16',48.22],OR6A2:['11',6.88],FUT2:['19',48.70]};
+  const W=980,H=600,top=80,bottom=40,gap=W/CHR.length,scale=(H-top-bottom)/248.9;
+  const host=document.getElementById('karyo');const svg=el('svg',{viewBox:`0 0 ${W} ${H}`},host);
+  const has=new Set(Object.values(LOCI).map(l=>l[0]));const xOf={};
+  CHR.forEach(([n,len,cen],i)=>{const x=gap*i+gap/2;xOf[n]=x;const y0=top,y1=top+len*scale,yc=top+cen*scale;
+    el('line',{x1:x,y1:y0,x2:x,y2:yc-4,class:'chr'+(has.has(n)?' has':'')},svg);
+    el('line',{x1:x,y1:yc+4,x2:x,y2:y1,class:'chr'+(has.has(n)?' has':'')},svg);
+    el('circle',{cx:x,cy:yc,r:2.6,class:'cen'},svg);
+    el('text',{x,y:y1+16,class:'chrlab'+(has.has(n)?' has':'')},svg).textContent=n;
+    /* faint bands as dots */
+    const r=rng(i+300);for(let y=y0+6;y<y1-6;y+=9)if(r()<.35)el('circle',{cx:x,cy:y,r:1.1,fill:'var(--ink)','fill-opacity':.25},svg);
+  });
+  /* labels in two staggered rows above the chromosomes, collision-resolved */
+  const items=GENES.map(g=>{const [c,mb]=LOCI[g.id];return {g,x:xOf[c],y:top+mb*scale,w:(g.id.length+g.trait.length+3)*6.6}}).sort((a,b)=>a.x-b.x);
+  const rows=[[],[]];items.forEach((it,i)=>{it.row=i%2;it.lx=it.x;rows[it.row].push(it)});
+  rows.forEach(r=>{for(let i=1;i<r.length;i++)r[i].lx=Math.max(r[i].lx,r[i-1].lx+r[i-1].w+14);
+    const over=r.length?r[r.length-1].lx+r[r.length-1].w-W:0;if(over>0){r.forEach(it=>it.lx-=over);for(let i=r.length-2;i>=0;i--)r[i].lx=Math.min(r[i].lx,r[i+1].lx-r[i].w-14)}});
+  items.forEach(it=>{const {g,x,y}=it;const ly=it.row?top-52:top-22;
+    const grp=el('g',{class:'gene',style:'cursor:pointer'},svg);
+    el('path',{d:`M${x},${y} L${x},${ly+10} L${it.lx-6},${ly+10}`,fill:'none',class:'gtick'},grp);
+    el('circle',{cx:x,cy:y,r:5,class:'gring'},grp);
+    const dot=el('circle',{cx:x,cy:y,r:4.5,class:'gdot'},grp);
+    el('circle',{cx:it.lx-6,cy:ly+10,r:1.6,fill:'var(--accent)'},grp);
+    const t=el('text',{x:it.lx,y:ly+6,class:'glab'},grp);t.innerHTML=`${g.id} <tspan class="t">· ${g.trait.toLowerCase()}</tspan>`;
+    const tipHtml=`<b>${g.name}</b> · ${g.rs}<br>${g.title}`;
+    grp.addEventListener('mouseenter',e=>{dot.setAttribute('r',7);grp.classList.add('on');showTip(tipHtml,e.clientX,e.clientY)});
+    grp.addEventListener('mousemove',e=>showTip(tipHtml,e.clientX,e.clientY));
+    grp.addEventListener('mouseleave',()=>{dot.setAttribute('r',4.5);grp.classList.remove('on');hideTip()});
+    grp.addEventListener('click',()=>{document.getElementById(g.id).scrollIntoView({behavior:'smooth'})});
+  });
+})();
+
+
+/* ---------- glossary tooltips ---------- */
+(function(){
+  let pinned=null;
+  function show(t,e){tip.className='tip def';tip.innerHTML=`<b>${t.dataset.t}</b>${t.dataset.d}`;const r=t.getBoundingClientRect();tip.style.left=Math.min(Math.max(160,r.left+r.width/2),innerWidth-160)+'px';tip.style.top=r.top+'px';tip.style.opacity=1}
+  function hide(){if(pinned)return;tip.style.opacity=0;setTimeout(()=>{if(tip.style.opacity=='0')tip.className='tip'},150)}
+  document.addEventListener('mouseover',e=>{const t=e.target.closest('.term');if(t)show(t,e)});
+  document.addEventListener('mouseout',e=>{if(e.target.closest('.term'))hide()});
+  document.addEventListener('focusin',e=>{const t=e.target.closest('.term');if(t)show(t)});
+  document.addEventListener('focusout',e=>{if(e.target.closest('.term')){pinned=null;hide()}});
+  document.addEventListener('click',e=>{const t=e.target.closest('.term');if(t){pinned=pinned===t?null:t;if(pinned)show(t);else hide()}else if(pinned){pinned=null;hide()}});
+  window.addEventListener('scroll',()=>{if(pinned){pinned=null;hide()}},{passive:true});
+})();
+
+/* ---------- mutator (toy gene) ---------- */
+(function(){
+  const REG=[['enh','TGTTTAC','мотив белка-регулятора печени'],['intron','CAGAT',''],['prom','TATAAA','промотор (ТАТА-бокс)'],['intron','GC',''],
+             ['exon','ATGGCTGAATGGAAACGT','экзон 1'],['splice','GT','граница экзона'],['intron','AAGCTCTTTCAC',''],['splice','AG','граница экзона'],['exon','GGCTACTTCTAA','экзон 2']];
+  const CODON={TTT:'Phe',TTC:'Phe',TTA:'Leu',TTG:'Leu',CTT:'Leu',CTC:'Leu',CTA:'Leu',CTG:'Leu',ATT:'Ile',ATC:'Ile',ATA:'Ile',ATG:'Met',GTT:'Val',GTC:'Val',GTA:'Val',GTG:'Val',TCT:'Ser',TCC:'Ser',TCA:'Ser',TCG:'Ser',CCT:'Pro',CCC:'Pro',CCA:'Pro',CCG:'Pro',ACT:'Thr',ACC:'Thr',ACA:'Thr',ACG:'Thr',GCT:'Ala',GCC:'Ala',GCA:'Ala',GCG:'Ala',TAT:'Tyr',TAC:'Tyr',TAA:'STOP',TAG:'STOP',CAT:'His',CAC:'His',CAA:'Gln',CAG:'Gln',AAT:'Asn',AAC:'Asn',AAA:'Lys',AAG:'Lys',GAT:'Asp',GAC:'Asp',GAA:'Glu',GAG:'Glu',TGT:'Cys',TGC:'Cys',TGA:'STOP',TGG:'Trp',CGT:'Arg',CGC:'Arg',CGA:'Arg',CGG:'Arg',AGT:'Ser',AGC:'Ser',AGA:'Arg',AGG:'Arg',GGT:'Gly',GGC:'Gly',GGA:'Gly',GGG:'Gly'};
+  const BASES='ACGT';
+  const ref=[],region=[];REG.forEach(([r,seq])=>{for(const b of seq){ref.push(b);region.push(r)}});
+  let cur=ref.slice();
+  const host=document.getElementById('mutator');
+  host.innerHTML=`<div class="mut-strip"></div>
+   <div class="mut-legend"><span><i style="background:#8a7a4a"></i>мотив регулятора</span><span><i style="background:#3d3a30"></i>промотор</span><span><i style="background:var(--ink)"></i>экзон</span><span><i style="background:var(--accent)"></i>граница экзона</span><span><i style="background:var(--line)"></i>интрон</span></div>
+   <div class="mut-out"><div class="mut-bars"></div><div><p class="mut-mech"></p><div class="mut-avi"><b>0.00</b>AVI игрушечный</div><div class="mut-prot"></div></div></div>
+   <button class="mut-reset">↺ вернуть как было</button>`;
+  const strip=host.querySelector('.mut-strip'),bars=host.querySelector('.mut-bars'),mech=host.querySelector('.mut-mech'),avi=host.querySelector('.mut-avi b'),prot=host.querySelector('.mut-prot');
+  const CELLS=[['Печень',1],['Кишечник',.6],['Нейрон',.3]];
+  bars.innerHTML=CELLS.map(([n])=>`<div class="row"><span>${n}</span><div class="bar"><i></i></div><span class="v"></span></div>`).join('');
+  ref.forEach((b,i)=>{const d=document.createElement('div');d.className='mut-b r-'+region[i];d.textContent=b;d.dataset.ref=b;d.title=REG.find(r=>r[0]===region[i])[2]||'интрон';d.addEventListener('click',()=>{cur[i]=BASES[(BASES.indexOf(cur[i])+1)%4];d.textContent=cur[i];d.classList.toggle('changed',cur[i]!==ref[i]);update()});strip.appendChild(d)});
+  host.querySelector('.mut-reset').addEventListener('click',()=>{cur=ref.slice();strip.querySelectorAll('.mut-b').forEach((d,i)=>{d.textContent=ref[i];d.classList.remove('changed')});update()});
+  function translate(seq){const aa=[];for(let i=0;i+2<seq.length;i+=3){const c=CODON[seq.slice(i,i+3)]||'?';aa.push(c);if(c==='STOP')break}return aa}
+  function exonSeq(s){return s.filter((_,i)=>region[i]==='exon').join('')}
+  function update(){
+    const mult={Печень:1,Кишечник:1,Нейрон:1};const notes=[];let score=0;
+    const changed=cur.map((b,i)=>b!==ref[i]?i:-1).filter(i=>i>=0);
+    const hit=r=>changed.some(i=>region[i]===r);
+    if(hit('prom')){for(const k in mult)mult[k]*=.25;notes.push('<b>промотор</b>: полимеразе не за что зацепиться — ген глохнет во всех клетках');score+=.7}
+    if(hit('enh')){mult['Печень']*=.2;notes.push('<b>мотив регулятора</b>: белок печени больше не садится — ген глохнет только в печени');score+=.5}
+    if(hit('splice')){for(const k in mult)mult[k]*=.15;notes.push('<b>сплайсинг</b>: РНК нарезается не там, экзон теряется');score+=.8}
+    const refAA=translate(exonSeq(ref)),curAA=translate(exonSeq(cur));
+    let protHtml='';const stopIdx=curAA.indexOf('STOP');const truncated=stopIdx>=0&&stopIdx<refAA.length-1;
+    refAA.forEach((a,i)=>{const c=curAA[i];if(a==='STOP')return;if(c===undefined||c==='STOP'&&i<refAA.length-1){protHtml+=`<span class="${c==='STOP'?'stop':'lost'}">${c==='STOP'?'STOP':a}</span>`}else protHtml+=`<span class="${c!==a?'diff':''}">${c}</span>`});
+    prot.innerHTML=protHtml;
+    if(truncated){notes.push('<b>нонсенс</b>: стоп-сигнал посреди инструкции — белок обрывается');score+=.85}
+    else{const diffs=refAA.filter((a,i)=>a!=='STOP'&&curAA[i]!==a).length;if(diffs){notes.push(`<b>миссенс</b>: ${diffs===1?'другая аминокислота':diffs+' другие аминокислоты'} — вопрос к AlphaMissense, сломает ли это белок`);score+=.35*diffs}
+      else if(hit('exon'))notes.push('<b>синонимичная замена</b>: буква другая, аминокислота та же')}
+    if(hit('intron')&&!notes.length)notes.push('<b>нейтрально</b>: опечатка в интроне, модель почти ничего не видит');
+    if(!changed.length)notes.push('Пока всё как в референсе. Кликните на букву.');
+    if(hit('intron'))score+=.02*changed.filter(i=>region[i]==='intron').length;
+    mech.innerHTML=notes.join('<br>');
+    avi.textContent=Math.min(1,score).toFixed(2);
+    bars.querySelectorAll('.row').forEach((row,k)=>{const [n,base]=CELLS[k];const v=base*mult[n];row.querySelector('i').style.width=(v*100)+'%';row.querySelector('.v').textContent=Math.round(v*100)+'%'});
+  }
+  update();
+})();
+
+/* ---------- assemble ---------- */
+const nav=document.getElementById('genenav'),main=document.getElementById('chapters');
+GENES.forEach((g,i)=>{
+  const a=document.createElement('a');a.href='#'+g.id;a.innerHTML=`<span class="g">${String(i+1).padStart(2,'0')} · ${g.id}</span><span class="t">${g.trait}</span>`;nav.appendChild(a);
+  const s=document.createElement('section');s.className='chapter';s.id=g.id;
+  s.innerHTML=`<div class="story">
+      <div class="eyebrow"><span class="n">Глава ${i+1}</span> · ${g.name}</div>
+      <h2>${g.title}<small>${g.sub}</small></h2>
+      <p class="lead">${g.lead}</p>${(STORY[g.id]||[]).map(t=>`<p class="body">${t}</p>`).join("")}<details class="srcs"><summary>Источники главы</summary><ol>${(SOURCES[g.id]||[]).map(([t,u])=>`<li><a href="${u}" target="_blank" rel="noopener">${t}</a></li>`).join("")}</ol></details>
+      <div class="factrow">
+        <div class="fact"><div class="k">Вариант</div><div class="v mono">${g.rs}</div></div>
+        <div class="fact"><div class="k">Замена</div><div class="v mono">${g.change}</div></div>
+        <div class="fact"><div class="k">Координата (hg38)</div><div class="v mono">${g.pos}</div></div>
+        <div class="fact"><div class="k">Где именно</div><div class="v">${g.where}</div></div>
+        <div class="fact"><div class="k">Частота</div><div class="v">${g.freq}</div></div>
+        <div class="fact"><div class="k">Разрушительных замен в гене</div><div class="v">${g.danger} %</div></div>
+      </div>
+    </div>
+    <div class="panels">
+      <div class="panel"><div class="panel-h"><h3>240 способов испортить этот участок</h3><span class="sub">80 позиций × 3 альтернативные буквы</span></div>
+        <div class="legend"><span><i class="l1"></i>нейтрально</span><span><i class="l2"></i>умеренно</span><span><i class="l3"></i>сильный эффект</span><span><i class="acc"></i>знаменитый вариант</span></div>
+        <div class="mx"></div>
+        <div class="controls"><label>порог AVI</label><input type="range" min="0" max="90" value="0"><span class="thr">показать все</span></div></div>
+      <div class="panel"><div class="panel-h"><h3>Где организм это почувствует</h3><span class="sub">предсказанный сдвиг экспрессии по тканям, log₂</span></div><div class="ts"></div></div>
+      <div class="panel"><div class="panel-h"><h3>Что именно ломается</h3><span class="sub">атрибуция AVI-оценки по механизму</span></div><div class="at"></div></div>
+    </div>`;
+  main.appendChild(s);
+  const circles=buildMatrix(g,s.querySelector('.mx'));buildTissues(g,s.querySelector('.ts'));buildAttr(g,s.querySelector('.at'));
+  const rng_=s.querySelector('input[type=range]'),thr=s.querySelector('.thr');
+  rng_.addEventListener('input',()=>{const t=rng_.value/100;thr.textContent=t?`только AVI ≥ ${t.toFixed(2)} · ${circles.filter(c=>c.__d.v>=t).length} замен`:'показать все';circles.forEach(c=>c.style.opacity=c.__d.v>=t||c.__d.famous?1:.06)});
+});
+/* active nav */
+const links=[...nav.querySelectorAll('a')];
+new IntersectionObserver(es=>es.forEach(e=>{if(e.isIntersecting){links.forEach(l=>l.classList.toggle('active',l.getAttribute('href')==='#'+e.target.id))}}),{rootMargin:'-40% 0px -55% 0px'}).observe&&document.querySelectorAll('.chapter').forEach(c=>new IntersectionObserver(es=>es.forEach(e=>{if(e.isIntersecting)links.forEach(l=>l.classList.toggle('active',l.getAttribute('href')==='#'+e.target.id))}),{rootMargin:'-40% 0px -55% 0px'}).observe(c));
+
+/* finale */
+const cmp=document.getElementById('compare');
+GENES.forEach(g=>{const d=document.createElement('div');d.className='card';d.innerHTML=`<h4>${g.id}</h4><div class="t">${g.title}</div><div class="big">${g.danger.toFixed(1)}<span style="font-size:20px"> %</span><small>замен с AVI ≥ 0.5</small></div>`;
+  const svg=el('svg',{viewBox:'0 0 100 40'},d);const r=rng(g.seed+9);const n=Math.round(g.danger*10);
+  for(let i=0;i<200;i++){el('circle',{cx:2.5+(i%40)*2.5,cy:2.5+Math.floor(i/40)*7,r:i<n?1.6:1,fill:i<n?'var(--accent)':'var(--ink)','fill-opacity':i<n?1:.15},svg)}
+  cmp.appendChild(d)});
+</script>
+</body>
+</html>

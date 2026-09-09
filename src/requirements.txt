@@ -1,0 +1,7 @@
+alphagenome>=0.9
+pandas>=2.2
+pyarrow
+numpy
+scipy
+scikit-learn
+requests
